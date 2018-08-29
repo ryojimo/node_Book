@@ -1,0 +1,68 @@
+/*
+Theme Name:  アプリケーション UI
+Theme URI:   ---
+Description: for Bridge Terminal
+Version:     1.00
+Author:      Uz
+Author URI:  ---
+*/
+
+/*-----------------------------------------------------------------------------
+ * class defines
+ *---------------------------------------------------------------------------*/
+.bg-1 {
+  background-image: url("./bg.gif");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+}
+
+.slider-width
+{
+    width: 40% !important;
+}
+
+
+/*-----------------------------------------------------------------------------
+ * <body> selector
+ *---------------------------------------------------------------------------*/
+body {
+    font: 400 15px/1.8 Lato, sans-serif;
+    color: #777;
+}
+
+
+/*-----------------------------------------------------------------------------
+ * <footer> selector
+ *---------------------------------------------------------------------------*/
+footer {
+    background-color: #2d2d30;
+    color: #f5f5f5;
+    padding: 32px;
+}
+
+footer a {
+    color: #f5f5f5;
+}
+
+footer a:hover {
+    color: #777;
+    text-decoration: none;
+}
+
+
+/*-----------------------------------------------------------------------------
+ * div.chart
+ *---------------------------------------------------------------------------*/
+.chart{
+  margin: 0.5em 0.2em 1em 1em;
+  width: 200px;
+  height: 180px;
+  display: inline-block;
+}
+
+.chartDaily{
+  margin: 1em 0.2em 1em 1em;
+  width: 83%;
+  height: 300px;
+}
+
