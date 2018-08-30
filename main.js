@@ -20,7 +20,7 @@ const DataRoom    = require( './js/DataRoom' );
 var now = new Date();
 console.log( "[main.js] " + now.toFormat("YYYY年MM月DD日 HH24時MI分SS秒").rainbow );
 console.log( "[main.js] " + "ver.01 : app.js".rainbow );
-console.log( "[main.js] " + "access to http://localhost:4001" );
+console.log( "[main.js] " + "access to http://localhost:3000" );
 
 // サーバー・オブジェクトを生成
 var server = http.createServer();
@@ -29,7 +29,7 @@ var server = http.createServer();
 server.on( 'request', doRequest );
 
 // 待ち受けスタート
-server.listen( process.env.VMC_APP_PORT || 4001 );
+server.listen( process.env.VMC_APP_PORT || 3000 );
 console.log( "[main.js] Server running!" );
 
 // request イベント処理
