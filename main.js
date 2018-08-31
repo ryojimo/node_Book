@@ -134,7 +134,7 @@ io.sockets.on( 'connection', function( socket ){
 
     var obj = books.GetMDDocData( function( err, data ){
       console.log( "[main.js] err     = " + err );
-      console.log( "[main.js] doc     = " + JSON.stringify(data) );
+//      console.log( "[main.js] doc     = " + JSON.stringify(data) );
       io.sockets.emit( 'S_to_C_BOOKS', {ret:err, value:data} );
     });
   });

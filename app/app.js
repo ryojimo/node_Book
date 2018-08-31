@@ -51,106 +51,45 @@ server.on( 'S_to_C_DATA', function( data ){
 
 
 server.on( 'S_to_C_BOOKS', function( data ){
-  console.log( "[app.js] " + 'S_to_C_VISITOR_ONE_DAY' );
-  console.log( "[app.js] data.value = " + JSON.stringify(data.value) );
+  console.log( "[app.js] " + 'S_to_C_BOOKS' );
+//  console.log( "[app.js] data.value = " + JSON.stringify(data.value) );
 
   if( data.ret == false ){
     alert( 'データがありません。\n\r' );
   }
 
-//  updateChartDaily( obj_visitor_daily, data.value );
+  $("#tabulator-example").tabulator({
+    layout:"fitColumns",
+    tooltips:true,
+    addRowPos:"top",
+    history:true,
+    pagination:"local",
+    paginationSize:20,
+    movableColumns:true,
+    initialSort:[
+        {column:"title", dir:"asc"},
+    ],
+    columns:[
+      {title:"貸し出し可否", field:"on_loan",       align:"center", width:120, sortable:"true", sorter:"string", formatter:"input", editable:false, cellClick:function(e, cell){console.log("cell click : on_loan")}, },
+      {title:"Global ID",    field:"gid",           align:"left",   width:150, sortable:"true", sorter:"number",                    editor:true,  cellClick:function(e, cell){console.log("cell click : gid")}, },
+      {title:"氏名",         field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string",                    editor:true,  cellClick:function(e, cell){console.log("cell click : user_name")}, },
+      {title:"タイトル",     field:"title",         align:"left",   width:400, sortable:"true", sorter:"string", formatter:"input", editable:false, },
+      {title:"著者",         field:"author",        align:"left",   width:150, sortable:"true", sorter:"string", formatter:"input", editable:false, },
+      {title:"出版社",       field:"publisher",     align:"left",   width:150, sortable:"true", sorter:"string", formatter:"input", editable:false, },
+      {title:"初版",         field:"first_edition", align:"left",   width:100, sortable:"true", sorter:"string", formatter:"input", editable:false, },
+      {title:"ISBN",         field:"ISBN",          align:"left",   width:150, sortable:"true", sorter:"number", formatter:"input", editable:false, },
+      {title:"言語",         field:"language",      align:"left",   width:100, sortable:"true", sorter:"string", formatter:"input", editable:false, },
+      {title:"カテゴリー",   field:"category",      align:"left",   width:200, sortable:"true", sorter:"string", formatter:"input", editable:false, },
+      {title:"出版形態",     field:"publication",   align:"left",   width:100, sortable:"true", sorter:"string", formatter:"input", editable:false, },
+      {title:"コメント",     field:"comment",       align:"left",   width:200, sortable:"true", sorter:"string", formatter:"input", editable:true,  },
+    ],
+  });
+
+  $("#tabulator-example").tabulator( "setData", data.value );
+
+//  var data = $("#tabulator-example").tabulator("getData");
+//  console.log( "[app.js] data[0] = " + JSON.stringify(data[0]) );
+
 });
-
-
-server.on( 'S_to_C_VISITOR', function( data ){
-  console.log( "[app.js] " + 'S_to_C_VISITOR' );
-  console.log( "[app.js] data = " + JSON.stringify(data) );
-
-  if( data.ret == false ){
-    alert( 'データがありません。\n\r' );
-  }
-
-  updateChartVisitorRanking( '訪問数ランキング', data );
-});
-
-
-//-------------------------------------
-/**
- * 1 day のセンサ値をグラフ表示する。
- * @param {object} obj_chart - 対象の chart オブジェクト
- * @param {object} data - グラフに表示するデータ
- * @return {void}
- * @example
- * updateChartDaily( 'temp', obj );
-*/
-function updateChartDaily( obj_chart, data ){
-  console.log( "[app.js] updateChartDaily()" );
-
-//  var obj = (new Function('return ' + data))();
-
-  var i = 0;
-  for( var key in data ){
-    obj_chart.data[i].label = key;
-    obj_chart.data[i].y     = data[key];
-    i++;
-  }
-
-  obj_chart.chart.options.title.text = obj_chart.title;
-  obj_chart.chart.options.data.dataPoints = obj_visitor_daily.data;
-  obj_chart.chart.render();
-}
-
-
-/**
- * 訪問回数ランキングをグラフ表示する。
- * @param {string} title - グラフに表示するタイトル
- * @param {object} data - グラフに表示するデータ
- * @return {void}
- * @example
- * updateChartVisitorRanking( 'temp', obj );
-*/
-function updateChartVisitorRanking( title, data ){
-  console.log( "[app.js] updateChartVisitorRanking()" );
-  console.log( "[app.js] title = " + title );
-
-  console.log( "[app.js] data = " + JSON.stringify(data) );
-
-  obj_visitor_ranking.data.length = 0;
-  var i = 0;
-  for( i = 0; i < data.length; i++ ){
-    obj_visitor_ranking.data.push( {label:data[i].name, y:data[i].cnt} );
-  }
-
-  obj_visitor_ranking.chart.options.title.text = title;
-  obj_visitor_ranking.chart.options.data.dataPoints = obj_visitor_ranking.data;
-  obj_visitor_ranking.chart.render();
-}
-
-
-//-----------------------------------------------------------------------------
-// ドキュメント・オブジェクトから受け取るイベント
-
-
-//-----------------------------------------------------------------------------
-/**
- * 指定した 1 日の、訪問人数を取得するためのコマンドを送る。
- * @return {void}
- * @example
- * sendGetCmdVisitorOneDay();
-*/
-function sendGetCmdVisitorOneDay(){
-  console.log( "[app.js] sendGetCmdVisitorOneDay()" );
-
-  var date   = $('#val_date_visitor').val();
-  console.log( "[app.js] date   = " + date );
-
-  if( date < '2018-01-24' ){
-    alert( "2018/01/24 以降を指定してください。" );
-  }
-
-  var obj = { date:date };
-  console.log( "[app.js] server.emit(" + 'C_to_S_GET_VISITOR_ONE_DAY' + ")" );
-  server.emit( 'C_to_S_GET_VISITOR_ONE_DAY', obj );
-}
 
 

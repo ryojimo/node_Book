@@ -24,8 +24,15 @@
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+
+  <!-- tabulator -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.3/css/tabulator.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.5.3/js/tabulator.min.js"></script>
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
@@ -53,7 +60,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#section_rental">レンタル</a></li>
+        <li><a href="#section_rental">図書レンタル</a></li>
         <li><a href="#"><span class="glyphicon glyphicon-search"></span></a></li>
       </ul>
     </div>
@@ -64,34 +71,15 @@
 <!-- レンタル -->
 <div id="section_rental" class="container-fluid">
 <section>
-  <h1>レンタル</h1>
+  <h1>図書レンタル</h1>
+  <p>
+    持ち出しの最長期間は「　2 週間　」です。
+  </p>
+  <p>
+    それまでに返却をお願いします。
+  </p>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
-      </tr>
-    </tbody>
-  </table>
+  <div id="tabulator-example"></div>
 
 </section>
 <br/>
@@ -103,7 +91,7 @@
   <a class="up-arrow" href="#" data-toggle="tooltip" title="TO TOP">
     <span class="glyphicon glyphicon-chevron-up"></span>
   </a><br><br>
-  <p>BT Sensors Made By <a href="#" data-toggle="tooltip" title="Visit uzeeze">www.uzeeze.com</a></p> 
+  <p>BT Books Made By <a href="#" data-toggle="tooltip" title="Visit uzeeze">www.uzeeze.com</a></p> 
 </footer>
 
 <script>

@@ -102,7 +102,7 @@ DataBooks.prototype.GetMDDocData = function( callback ){
         db.close();
 
 //      console.log( documents );
-        callback( ret, documents );
+        callback( true, documents );
       }
       catch( e ){
         console.log( "[DataBooks.js] e = " + e );
