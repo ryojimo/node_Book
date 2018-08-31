@@ -75,13 +75,10 @@ DataBooks.prototype.CreateMDDoc = function( day, hour ){
  * @param {function(boolean, Object.<string, number>)} callback - データを取得するためのコールバック関数
  * @return {void}
  * @example
- * GetMDDocData( '2018-05-14',  );
+ * GetMDDocData( callback );
 */
-DataBooks.prototype.GetMDDocData = function( day, callback ){
+DataBooks.prototype.GetMDDocData = function( callback ){
   console.log( "[DataBooks.js] GetMDDocData()" );
-  console.log( "[DataBooks.js] day    = " + day );
-
-  var cname = day;  // コレクション名
 
   MongoClient.connect( this.mongo_url, function(err, db) {
     if( err ) throw err;

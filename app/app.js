@@ -21,103 +21,13 @@ var obj_visitor_daily   = {chart:null, data:null, type:'column', color:'#8D6E63'
 window.onload = function(){
   console.log( "[app.js] window.onloaded" );
 
-  obj_visitor_ranking = makeChartVisitorRanking( 'cid_visitor_ranking', obj_visitor_ranking );
-  obj_visitor_ranking.chart.render();
-
-  obj_visitor_daily = makeChartDaily( 'cid_visitor_daily', obj_visitor_daily );
-  obj_visitor_daily.chart.render();
-
-  console.log( "[app.js] server.emit(" + 'C_to_S_GET_VISITOR' + ")" );
-  server.emit( 'C_to_S_GET_VISITOR' );
+  console.log( "[app.js] server.emit(" + 'C_to_S_GET_BOOKS' + ")" );
+  server.emit( 'C_to_S_GET_BOOKS' );
 };
 
 
 window.onunload = function(){
   console.log( "[app.js] window.onunloaded" );
-};
-
-
-/**
- * 1 day のデータを表示するグラフ ( チャート ) を作成する。
- * @param {string} domid - グラフを表示する DOM の ID 名
- * @param {object} obj - グラフ化する対象のオブジェクト
- * @return {string} chart - 作成するグラフのオブジェクトとデータ
- * @example
- * makeChartDaily( 'cid_visitor_daily', obj_visitor_daily );
-*/
-function makeChartDaily( domid, obj ){
-  console.log( "[app.js] makeChartDaily()" );
-  console.log( "[app.js] domid = " + domid );
-
-  var data = new Array({label:'00-00', y:0}, {label:'01-00', y:0}, {label:'02-00', y:0}, {label:'03-00', y:0},
-                       {label:'04-00', y:0}, {label:'05-00', y:0}, {label:'06-00', y:0}, {label:'07-00', y:0},
-                       {label:'08-00', y:0}, {label:'09-00', y:0}, {label:'10-00', y:0}, {label:'11-00', y:0},
-                       {label:'12-00', y:0}, {label:'13-00', y:0}, {label:'14-00', y:0}, {label:'15-00', y:0},
-                       {label:'16-00', y:0}, {label:'17-00', y:0}, {label:'18-00', y:0}, {label:'19-00', y:0},
-                       {label:'20-00', y:0}, {label:'21-00', y:0}, {label:'22-00', y:0}, {label:'23-00', y:0}
-                      );
-
-  var chart = new CanvasJS.Chart(domid, {
-    animationEnabled: true,
-    animationDuration: 2000,
-    title:{text: obj.title,
-           fontColor: '#222',
-           fontSize: 16,
-    },
-    subtitles:[{text: '単位: ' + obj.unit,
-                fontColor: '#555',
-                fontSize: 12,
-               }
-    ],
-    axisX: { labelAngle:-45, labelFontSize:14, labelFontColor:'#222' },
-    axisY: { labelFontSize:14, labelFontColor:'#222' },
-    data: [{type: obj.type,           // グラフの種類 (area, bar, bubble, column, stackedColumn )
-            color: obj.color,
-            cursor: 'pointer',
-            dataPoints: data        // グラフに描画するデータ
-    }]
-  });
-
-  return {chart:chart, data:data};
-};
-
-
-/**
- * 訪問回数ランキングを表示するグラフ ( チャート ) を作成する。
- * @param {string} domid - グラフを表示する DOM の ID 名
- * @param {object} obj - グラフ化する対象のオブジェクト
- * @return {string} chart - 作成するグラフのオブジェクトとデータ
- * @example
- * makeChartVisitorRanking( 'cid_visitor_daily', obj_visitor_daily );
-*/
-function makeChartVisitorRanking( domid, obj ){
-  console.log( "[app.js] makeChartVisitorRanking()" );
-  console.log( "[app.js] domid = " + domid );
-
-  var data = new Array();
-
-  var chart = new CanvasJS.Chart(domid, {
-    animationEnabled: true,
-    animationDuration: 2000,
-    title:{text: obj.title,
-           fontColor: '#222',
-           fontSize: 16,
-    },
-    subtitles:[{text: '単位: ' + obj.unit,
-                fontColor: '#555',
-                fontSize: 12,
-               }
-    ],
-    axisX: { labelAngle:-90, labelFontSize:10, labelFontColor:'#222' },
-    axisY: { minimum: 0, labelFontSize:14, labelFontColor:'#222' },
-    data: [{type: obj.type,           // グラフの種類 (area, bar, bubble, column, stackedColumn )
-            color: obj.color,
-            cursor: 'pointer',
-            dataPoints: data        // グラフに描画するデータ
-    }]
-  });
-
-  return {chart:chart, data:data};
 };
 
 
@@ -140,7 +50,7 @@ server.on( 'S_to_C_DATA', function( data ){
 });
 
 
-server.on( 'S_to_C_VISITOR_ONE_DAY', function( data ){
+server.on( 'S_to_C_BOOKS', function( data ){
   console.log( "[app.js] " + 'S_to_C_VISITOR_ONE_DAY' );
   console.log( "[app.js] data.value = " + JSON.stringify(data.value) );
 
@@ -148,7 +58,7 @@ server.on( 'S_to_C_VISITOR_ONE_DAY', function( data ){
     alert( 'データがありません。\n\r' );
   }
 
-  updateChartDaily( obj_visitor_daily, data.value );
+//  updateChartDaily( obj_visitor_daily, data.value );
 });
 
 

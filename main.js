@@ -12,8 +12,7 @@ var colors   = require( 'colors' );
 require( 'date-utils' );
 var schedule = require( 'node-schedule' );
 
-const DataPersons = require( './js/DataPersons' );
-const DataRoom    = require( './js/DataRoom' );
+const DataBooks   = require( './js/DataBooks' );
 
 
 // Ver. 表示
@@ -89,8 +88,7 @@ var io = socketio.listen( server );
 //-----------------------------------------------------------------------------
 var timerFlg;
 
-var persons = new DataPersons();
-var room    = new DataRoom();
+var books   = new DataBooks();
 
 
 startSystem();
@@ -131,25 +129,13 @@ io.sockets.on( 'connection', function( socket ){
   });
 
 
-  socket.on( 'C_to_S_GET_VISITOR', function(){
-    console.log( "[main.js] " + 'C_to_S_GET_VISITOR' );
+  socket.on( 'C_to_S_GET_BOOKS', function(){
+    console.log( "[main.js] " + 'C_to_S_GET_BOOKS' );
 
-    var obj = persons.GetRankingTop50( function( err, doc ){
+    var obj = books.GetMDDocData( function( err, data ){
       console.log( "[main.js] err     = " + err );
-
-      console.log( "[main.js] doc     = " + JSON.stringify(doc) );
-      io.sockets.emit( 'S_to_C_VISITOR', doc );
-    });
-  });
-
-
-  socket.on( 'C_to_S_GET_VISITOR_ONE_DAY', function( data ){
-    console.log( "[main.js] " + 'C_to_S_GET_VISITOR_ONE_DAY' );
-    console.log( "[main.js] data.date   = " + data.date );
-
-    var obj = room.GetMDDocDataOneDay( data.date, function( err, data ){
-//      console.log( "[main.js] data     = " + JSON.stringify(data) );
-      io.sockets.emit( 'S_to_C_VISITOR_ONE_DAY', {ret:err, value:data} );
+      console.log( "[main.js] doc     = " + JSON.stringify(data) );
+      io.sockets.emit( 'S_to_C_BOOKS', {ret:err, value:data} );
     });
   });
 
