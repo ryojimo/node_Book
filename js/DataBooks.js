@@ -35,17 +35,14 @@ var DataBooks = function(){
 
 /**
  * Mongodb にデータベース、コレクション、ドキュメントを作成する。
- * @param {string} day - 日付。( MongoDB のコレクション名でも使用 )
- * @param {string} hour - 時間。
- * @param {number} cnt - 訪問者数カウンタ。
+ * @param {Object.<string, string>} data - JSON 文字列
  * @return {void}
  * @example
- * CreateMDDoc( "2018-08-10", "08:00" );
+ * CreateMDDoc( "{...}" );
 */
-DataBooks.prototype.CreateMDDoc = function( day, hour ){
+DataBooks.prototype.CreateMDDoc = function( data ){
   console.log( "[DataBooks.js] CreateMDDoc()" );
-
-  var doc = { hour: hour, cnt: this.cnt };
+  console.log( "[DataBooks.js] data = " + JSON.stringify(data) );
 
   MongoClient.connect( this.mongo_url, function(err, db) {
     if( err ){
@@ -56,7 +53,7 @@ DataBooks.prototype.CreateMDDoc = function( day, hour ){
     var dbo = db.db( 'books' );
 
     // コレクションを取得する
-    var clo = dbo.collection( day );
+    var clo = dbo.collection( '2018_08' );
 
     // doc をデータベースに insert する
     clo.insertOne( doc, function(err, res) {
@@ -65,6 +62,44 @@ DataBooks.prototype.CreateMDDoc = function( day, hour ){
       }
       db.close();
     });
+  });
+}
+
+
+/**
+ * Mongodb にデータベース、コレクション、ドキュメントを更新する。
+ * @param {Object.<string, string>} data - JSON 文字列
+ * @return {void}
+ * @example
+ * UpdateMDDoc( '{...}' );
+*/
+DataBooks.prototype.UpdateMDDocData = function( data ){
+  console.log( "[DataBooks.js] UpdateMDDocData()" );
+//  console.log( "[DataBooks.js] data = " + JSON.stringify(data) );
+
+  MongoClient.connect( this.mongo_url, function(err, db) {
+    if( err ){
+      throw err;
+    }
+
+    // データベースを取得する
+    var dbo = db.db( 'books' );
+
+    // コレクションを取得する
+    var clo = dbo.collection( '2018_08' );
+
+    var query = { title: data.title };
+    var newvalues = { $set: data };
+
+/*
+    // doc をデータベースに insert する
+    clo.updateOne( query, newvalues, function(err, res) {
+      if( err ){
+        throw err;
+      }
+      db.close();
+    });
+*/
   });
 }
 
@@ -111,48 +146,6 @@ DataBooks.prototype.GetMDDocData = function( callback ){
     });
   });
 }
-
-
-
-
-/**
- * 引数の file からデータを読み出して dataOneDay プロパティを更新する。
- * @param {string} file - 対象のファイル ( フルパス )
- * @return {Object} ret - 読み出したデータ
- * @example
- * var obj = UpdateDataOneDay( '/media/pi/USBDATA/2018-01-23_room.txt' );
-*/
-DataBooks.prototype.UpdateDataOneDay = function( file ){
-  console.log( "[DataBooks.js] UpdateDataOneDay()" );
-  console.log( "[DataBooks.js] file = " + file );
-
-  var date = file.replace( '/media/pi/USBDATA/', '' );
-  date = date.replace( '_room.txt', '' );
-
-  this.date = date;
-  console.log( "[DataBooks.js] this.date = " + this.date );
-
-  var ret = false;
-  try{
-    fs.statSync( file );
-    var ret = fs.readFileSync( file, 'utf8');
-    var obj = (new Function("return " + ret))();
-
-    for( var key in this.dataOneDay ){
-      this.dataOneDay[key] = obj[key];
-    }
-    console.log( '[DataBooks.js] this.dataOneDay = ' + JSON.stringify(this.dataOneDay) );
-  } catch( err ){
-    if( err.code === 'ENOENT' ){
-      console.log( "[DataBooks.js] file does not exist." );
-      for( var key in this.dataOneDay ){
-        this.dataOneDay[key] = 0;
-      }
-      ret = false
-    }
-  }
-  return ret;
-};
 
 
 /**

@@ -129,13 +129,47 @@ io.sockets.on( 'connection', function( socket ){
   });
 
 
-  socket.on( 'C_to_S_GET_BOOKS', function(){
-    console.log( "[main.js] " + 'C_to_S_GET_BOOKS' );
+  socket.on( 'C_to_S_INIT', function(){
+    console.log( "[main.js] " + 'C_to_S_INIT' );
 
     var obj = books.GetMDDocData( function( err, data ){
       console.log( "[main.js] err     = " + err );
 //      console.log( "[main.js] doc     = " + JSON.stringify(data) );
-      io.sockets.emit( 'S_to_C_BOOKS', {ret:err, value:data} );
+      io.sockets.emit( 'S_to_C_INIT_DONE', {ret:err, value:data} );
+    });
+  });
+
+
+  socket.on( 'C_to_S_UPDATE', function( data ){
+    console.log( "[main.js] " + 'C_to_S_UPDATE' );
+//  console.log( "[main.js] data = " + JSON.stringify(data) );
+
+    var obj = books.GetMDDocData( function( err, data_org ){
+      console.log( "[main.js] err     = " + err );
+
+      for(let i = 0; i < data.length; i++){
+        if( data[i].gid != data_org[i].gid && data[i].user_name != data_org[i].user_name ){
+
+          if( data[i].gid == "" && data[i].user_name == "" ){
+            data[i].status  = false;
+            data[i].date     = "";
+            data[i].progress = 0;
+            data[i].deadline = "";
+          } else {
+            data[i].status  = true;
+            data[i].date     = yyyymmdd(  0 );
+            data[i].progress = 14;
+            data[i].deadline = yyyymmdd( data[i].progress );
+            data[i].count++;
+          }
+
+          console.log( "[app.js] data[" + i + "] = " + JSON.stringify(data[i]) );
+          var obj = books.UpdateMDDocData( data[i] );
+        }
+      }
+
+//      console.log( "[main.js] doc     = " + JSON.stringify(data) );
+      io.sockets.emit( 'S_to_C_UPDATE_DONE', {ret:true, value:data} );
     });
   });
 
@@ -162,22 +196,24 @@ var toDoubleDigits = function( num ){
 
 
 /**
- * 現在の日付を YYYY-MM-DD 形式で取得する
- * @param {void}
+ * 現在の日付に offset を足した日付を YYYY-MM-DD 形式で取得する
+ * @param {number} offset - 数値
  * @return {string} day - 日付
  * @example
  * yyyymmdd();
 */
-var yyyymmdd = function(){
-  console.log( "[main.js] yyyymmdd()" );
+var yyyymmdd = function( offset ){
+//  console.log( "[main.js] yyyymmdd()" );
   var date = new Date();
+
+  date.setDate( date.getDate() + offset );
 
   var yyyy = date.getFullYear();
   var mm   = toDoubleDigits( date.getMonth() + 1 );
   var dd   = toDoubleDigits( date.getDate() );
 
   var day = yyyy + '-' + mm + '-' + dd;
-  console.log( "[main.js] day = " + day );
+//  console.log( "[main.js] day = " + day );
   return day;
 };
 
