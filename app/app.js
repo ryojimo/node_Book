@@ -3,10 +3,10 @@
  * @author       Ryoji Morita
  * @version      0.0.1
 */
-//var sv_ip   = 'book.rp.lfx.sony.co.jp';     // node.js server の IP アドレス
-//var sv_ip   = '43.2.100.151';               // node.js server の IP アドレス
-var sv_ip   = '192.168.91.129';               // node.js server の IP アドレス
-var sv_port = 3000;                           // node.js server の port 番号
+var sv_ip   = 'book.rp.lfx.sony.co.jp';     // node.js server の IP アドレス
+//var sv_ip   = '43.2.100.159';             // node.js server の IP アドレス
+//var sv_ip   = '192.168.91.129';           // node.js server の IP アドレス
+var sv_port = 3000;                         // node.js server の port 番号
 
 var server = io.connect( 'http://' + sv_ip + ':' + sv_port ); //ローカル
 
@@ -70,23 +70,23 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
         {column:"title", dir:"asc"},
     ],
     columns:[
-      {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true, cellClick:function(e, cell){updateTable()}, },
-      {title:"Global ID",  field:"gid",           align:"left",   width:100, sortable:"true", sorter:"number", formatter:"plaintext", editor:"input", cellClick:function(e, cell){console.log("cell click : gid")}, },
-      {title:"email",      field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string", formatter:"plaintext", editor:"input", cellClick:function(e, cell){console.log("cell click : user_name")}, },
-      {title:"貸し出し日", field:"date",          align:"center", width:100, sortable:"true", sorter:"date",   formatter:"plaintext", editable:false, cellClick:function(e, cell){console.log("cell click : date")}, },
-      {title:"返却期限",   field:"deadline",      align:"center", width:100, sortable:"true", sorter:"date",   formatter:"plaintext", editable:false, cellClick:function(e, cell){console.log("cell click : deadline")}, },
-      {title:"残日数",     field:"progress",      align:"left",   width:80,                   sorter:"number", formatter:"progress",  },
-      {title:"Rating",     field:"rating",        align:"center", width:120,                                   formatter:"star",      formatterParams:{stars:6}, editable:true, },
-      {title:"貸出回数",   field:"count",         align:"left",   width:120,                  sorter:"number", formatter:"progress",  },
-      {title:"タイトル",   field:"title",         align:"left",   width:400, sortable:"true", sorter:"string", formatter:"plaintext", editable:false, },
-      {title:"著者",       field:"author",        align:"left",   width:150, sortable:"true", sorter:"string", formatter:"plaintext", editable:false, },
-      {title:"出版社",     field:"publisher",     align:"left",   width:150, sortable:"true", sorter:"string", formatter:"plaintext", editable:false, },
-      {title:"初版",       field:"first_edition", align:"left",   width:100, sortable:"true", sorter:"string", formatter:"plaintext", editable:false, },
-      {title:"ISBN",       field:"ISBN",          align:"left",   width:150, sortable:"true", sorter:"number", formatter:"plaintext", editable:false, },
-      {title:"言語",       field:"language",      align:"left",   width:100, sortable:"true", sorter:"string", formatter:"plaintext", editable:false, },
-      {title:"カテゴリー", field:"category",      align:"left",   width:200, sortable:"true", sorter:"string", formatter:"plaintext", editable:false, },
-      {title:"出版形態",   field:"publication",   align:"left",   width:100, sortable:"true", sorter:"string", formatter:"plaintext", editable:false, },
-      {title:"コメント",   field:"comment",       align:"left",   width:200, sortable:"true", sorter:"string", formatter:"plaintext", editable:true,  },
+      {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true,                  cellClick:function(e, cell){updateTable()}, },
+      {title:"Global ID",  field:"gid",           align:"left",   width:100, sortable:"true", sorter:"number",  formatter:"plaintext",                 editor:"input", cellClick:function(e, cell){console.log("cell click : gid")}, },
+      {title:"email",      field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext",                 editor:"input", cellClick:function(e, cell){console.log("cell click : user_name")}, },
+      {title:"貸し出し日", field:"date",          align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                 cellClick:function(e, cell){console.log("cell click : date")}, },
+      {title:"返却期限",   field:"deadline",      align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                 cellClick:function(e, cell){console.log("cell click : deadline")}, },
+      {title:"残日数",     field:"progress",      align:"left",   width:80,                   sorter:"number",  formatter:"progress",  },
+      {title:"Rating",     field:"rating",        align:"center", width:120,                                    formatter:"star",      editable:true,  editor:true, formatterParams:{stars:6}, },
+      {title:"貸出回数",   field:"count",         align:"left",   width:120,                  sorter:"number",  formatter:"progress",  },
+      {title:"タイトル",   field:"title",         align:"left",   width:400, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
+      {title:"著者",       field:"author",        align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
+      {title:"出版社",     field:"publisher",     align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
+      {title:"初版",       field:"first_edition", align:"left",   width:100, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
+      {title:"ISBN",       field:"ISBN",          align:"left",   width:150, sortable:"true", sorter:"number",  formatter:"plaintext", editable:false, },
+      {title:"言語",       field:"language",      align:"left",   width:100, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
+      {title:"カテゴリー", field:"category",      align:"left",   width:200, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
+      {title:"出版形態",   field:"publication",   align:"left",   width:100, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
+      {title:"コメント",   field:"comment",       align:"left",   width:200, sortable:"true", sorter:"string",  formatter:"plaintext", editable:true,  },
     ],
   });
 

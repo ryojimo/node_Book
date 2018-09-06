@@ -53,7 +53,7 @@ DataBooks.prototype.CreateMDDoc = function( data ){
     var dbo = db.db( 'books' );
 
     // コレクションを取得する
-    var clo = dbo.collection( '2018_08' );
+    var clo = dbo.collection( '2018_09' );
 
     // doc をデータベースに insert する
     clo.insertOne( doc, function(err, res) {
@@ -75,7 +75,7 @@ DataBooks.prototype.CreateMDDoc = function( data ){
 */
 DataBooks.prototype.UpdateMDDocData = function( data ){
   console.log( "[DataBooks.js] UpdateMDDocData()" );
-//  console.log( "[DataBooks.js] data = " + JSON.stringify(data) );
+  console.log( "[DataBooks.js] data = " + JSON.stringify(data) );
 
   MongoClient.connect( this.mongo_url, function(err, db) {
     if( err ){
@@ -86,12 +86,23 @@ DataBooks.prototype.UpdateMDDocData = function( data ){
     var dbo = db.db( 'books' );
 
     // コレクションを取得する
-    var clo = dbo.collection( '2018_08' );
+    var clo = dbo.collection( '2018_09' );
 
     var query = { title: data.title };
-    var newvalues = { $set: data };
+    var newvalues = { $set: {status   : data.status,
+                             gid      : data.gid,
+                             user_name: data.user_name,
+                             date     : data.date,
+                             deadline : data.deadline,
+                             progress : data.progress,
+                             rating   : data.rating,
+                             count    : data.count,
+                             comment  : data.comment}
+                    };
 
-/*
+  console.log( "[DataBooks.js] query = " + JSON.stringify(query) );
+  console.log( "[DataBooks.js] newvalues = " + JSON.stringify(newvalues) );
+
     // doc をデータベースに insert する
     clo.updateOne( query, newvalues, function(err, res) {
       if( err ){
@@ -99,7 +110,6 @@ DataBooks.prototype.UpdateMDDocData = function( data ){
       }
       db.close();
     });
-*/
   });
 }
 
@@ -122,7 +132,7 @@ DataBooks.prototype.GetMDDocData = function( callback ){
     var dbo = db.db( 'books' );
 
     // コレクションを取得する
-    var clo = dbo.collection( "2018_08" );
+    var clo = dbo.collection( '2018_09' );
 
     // コレクションに含まれるすべてのドキュメントを取得する
     clo.find({}).toArray( function(err, documents){

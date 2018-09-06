@@ -135,6 +135,13 @@ io.sockets.on( 'connection', function( socket ){
     var obj = books.GetMDDocData( function( err, data ){
       console.log( "[main.js] err     = " + err );
 //      console.log( "[main.js] doc     = " + JSON.stringify(data) );
+
+        for(let i = 0; i < data.length; i++){
+          if( data[i].date != "" ){
+            data[i].progress = getRestDay( data[i].deadline );
+          }
+        }
+
       io.sockets.emit( 'S_to_C_INIT_DONE', {ret:err, value:data} );
     });
   });
@@ -157,7 +164,7 @@ io.sockets.on( 'connection', function( socket ){
             data[i].deadline = "";
           } else {
             data[i].status  = true;
-            data[i].date     = yyyymmdd(  0 );
+            data[i].date     = yyyymmdd( 0 );
             data[i].progress = 14;
             data[i].deadline = yyyymmdd( data[i].progress );
             data[i].count++;
@@ -175,6 +182,27 @@ io.sockets.on( 'connection', function( socket ){
 
 
 });
+
+
+/**
+ * 残日数を取得する
+ * @param {number} offset - "2018-09-06" のような形式の文字列
+ * @return {string} day - 残日数
+ * @example
+ * getRestDay( "2018-09-06" );
+*/
+var getRestDay = function( deadline ){
+//  console.log( "[main.js] getRestDay()" );
+  var now = new Date();
+  var tgday = deadline.replace( '-', '/' );
+  var days = Math.ceil( (Date.parse(tgday) - now.getTime()) / (24 * 60 * 60 * 1000));
+
+  console.log( "[main.js] now   = " + now );
+  console.log( "[main.js] tgday = " + tgday );
+  console.log( "[main.js] days  = " + days );
+
+  return days;
+};
 
 
 /**
