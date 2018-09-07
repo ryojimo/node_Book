@@ -19,7 +19,7 @@ const DataBooks   = require( './js/DataBooks' );
 var now = new Date();
 console.log( "[main.js] " + now.toFormat("YYYY年MM月DD日 HH24時MI分SS秒").rainbow );
 console.log( "[main.js] " + "ver.01 : app.js".rainbow );
-console.log( "[main.js] " + "access to http://localhost:3000" );
+console.log( "[main.js] " + "access to http://localhost:4002" );
 
 // サーバー・オブジェクトを生成
 var server = http.createServer();
@@ -28,7 +28,7 @@ var server = http.createServer();
 server.on( 'request', doRequest );
 
 // 待ち受けスタート
-server.listen( process.env.VMC_APP_PORT || 3000 );
+server.listen( process.env.VMC_APP_PORT || 4002 );
 console.log( "[main.js] Server running!" );
 
 // request イベント処理
@@ -180,10 +180,10 @@ io.sockets.on( 'connection', function( socket ){
           }
 
           console.log( "[main.js] data.value[" + i + "] = " + JSON.stringify(data.value[i]) );
-          var obj = books.UpdateMDDocData( collection, {_id: data.value[i]._id}, data.value[i] );
+          var obj = books.UpdateMDDocData( collection, data.value[i]._id, data.value[i] );
         } else if( data.value[i].rating != data_org[i].rating ){
           console.log( "[main.js] data.value[" + i + "] = " + JSON.stringify(data.value[i]) );
-          var obj = books.UpdateMDDocData( collection, {_id: data.value[i]._id}, data.value[i] );
+          var obj = books.UpdateMDDocData( collection, data.value[i]._id, data.value[i] );
         }
       }
 

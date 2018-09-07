@@ -3,10 +3,10 @@
  * @author       Ryoji Morita
  * @version      0.0.1
 */
-var sv_ip   = 'book.rp.lfx.sony.co.jp';     // node.js server の IP アドレス
+//var sv_ip   = 'book.rp.lfx.sony.co.jp';     // node.js server の IP アドレス
 //var sv_ip   = '43.2.100.159';             // node.js server の IP アドレス
-//var sv_ip   = '192.168.91.129';           // node.js server の IP アドレス
-var sv_port = 3000;                         // node.js server の port 番号
+var sv_ip   = '192.168.91.11';           // node.js server の IP アドレス
+var sv_port = 4002;                         // node.js server の port 番号
 
 var server = io.connect( 'http://' + sv_ip + ':' + sv_port ); //ローカル
 
@@ -18,8 +18,8 @@ window.onload = function(){
   console.log( "[app.js] window.onloaded" );
 
   console.log( "[app.js] server.emit(" + 'C_to_S_INIT' + ")" );
-  server.emit( 'C_to_S_INIT', {which:'one_2018-09'} );
-  server.emit( 'C_to_S_INIT', {which:'many_2018-09'} );
+  server.emit( 'C_to_S_INIT', {which:'one_2018_09'} );
+  server.emit( 'C_to_S_INIT', {which:'many_2018_09'} );
 };
 
 
@@ -57,7 +57,7 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
     alert( 'データがありません。\n\r' );
   }
 
-  if( data.which == 'one_2018-09' ){
+  if( data.which == 'one_2018_09' ){
     // 一冊のみの本のテーブル
     $("#tabulator-table-one").tabulator({
       layout:"fitColumns",
@@ -94,7 +94,7 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
     $("#tabulator-table-one").tabulator( "setData", data.value );
   }
 
-  if( data.which == 'many_2018-09' ){
+  if( data.which == 'many_2018_09' ){
     // 複数冊ある本のテーブル
     $("#tabulator-table-many").tabulator({
       layout:"fitColumns",
@@ -136,9 +136,15 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
 
 server.on( 'S_to_C_UPDATE_DONE', function( data ){
   console.log( "[app.js] " + 'S_to_C_UPDATE_DONE' );
-//  console.log( "[app.js] data.value = " + JSON.stringify(data.value) );
-  $("#tabulator-table-one").tabulator( "setData", data.value );
-  $("#tabulator-table-many").tabulator( "setData", data.value );
+  console.log( "[app.js] data.ret   = " + data.ret );
+  console.log( "[app.js] data.which = " + data.which );
+  //console.log( "[app.js] data.value = " + JSON.stringify(data.value) );
+
+  if( data.which == 'one_2018_09' ){
+    $("#tabulator-table-one").tabulator( "setData", data.value );
+  } else if( data.which == 'many_2018_09' ){
+    $("#tabulator-table-many").tabulator( "setData", data.value );
+  }
 });
 
 
@@ -161,7 +167,7 @@ function updateTableOne(){
 //  console.log( "[app.js] data = " + data );
 
   console.log( "[app.js] server.emit(" + 'C_to_S_UPDATE' + ")" );
-  server.emit( 'C_to_S_UPDATE', {which:'one_2018-09', value:data} );
+  server.emit( 'C_to_S_UPDATE', {which:'one_2018_09', value:data} );
 
 }
 
@@ -180,7 +186,7 @@ function updateTableMany(){
 //  console.log( "[app.js] data = " + data );
 
   console.log( "[app.js] server.emit(" + 'C_to_S_UPDATE' + ")" );
-  server.emit( 'C_to_S_UPDATE', {which:'many_2018-09', value:data} );
+  server.emit( 'C_to_S_UPDATE', {which:'many_2018_09', value:data} );
 
 }
 

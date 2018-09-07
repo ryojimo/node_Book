@@ -9,7 +9,7 @@
 // 必要なライブラリをロード
 var fs = require( 'fs' );
 var MongoClient  = require( 'mongodb' ).MongoClient;
-
+var ObjectID = require('mongodb').ObjectID;
 
 /**
  * データ class
@@ -86,10 +86,10 @@ DataBooks.prototype.GetMDDocData = function( collection, callback ){
  * @example
  * UpdateMDDoc( '{...}' );
 */
-DataBooks.prototype.UpdateMDDocData = function( collection, query, data ){
+DataBooks.prototype.UpdateMDDocData = function( collection, id, data ){
   console.log( "[DataBooks.js] UpdateMDDocData()" );
   console.log( "[DataBooks.js] collection = " + collection );
-  console.log( "[DataBooks.js] query = " + JSON.stringify(query) );
+  console.log( "[DataBooks.js] id = " + id );
   console.log( "[DataBooks.js] data = " + JSON.stringify(data) );
 
   MongoClient.connect( this.mongo_url, function(err, db) {
@@ -117,7 +117,7 @@ DataBooks.prototype.UpdateMDDocData = function( collection, query, data ){
   console.log( "[DataBooks.js] newvalues = " + JSON.stringify(newvalues) );
 
     // doc をデータベースに insert する
-    clo.updateOne( query, newvalues, function(err, res) {
+    clo.updateOne( {'_id':ObjectID(id)}, newvalues, function(err, res) {
       if( err ){
         throw err;
       }
