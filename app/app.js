@@ -128,7 +128,7 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
 //        row.getElement().addClass("table-bordered");
       },
       columns:[
-        {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true,                                                   cellClick:function(e, cell){updateTableOne()}, },
+        {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true,                                                   cellClick:function(e, cell){updateTableMany()}, },
         {title:"Global ID",  field:"gid",           align:"left",   width:100, sortable:"true", sorter:"number",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : gid")}, },
         {title:"email",      field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : user_name")}, },
         {title:"貸し出し日", field:"date",          align:"center", width:110, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                                                  cellClick:function(e, cell){console.log("cell click : date")}, },
