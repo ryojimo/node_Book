@@ -68,14 +68,24 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
       paginationSize:15,
       movableColumns:true,
       initialSort:[
-          {column:"title", dir:"asc"},
+        {column:"title", dir:"asc"},
       ],
+      rowFormatter:function(row){
+        //row - row component
+        var data = row.getData();
+
+        if(data.gid != ""){
+          row.getElement().css({"background-color":"#424242"});
+          row.getElement().css({"color":"#f5f5f5"});
+        }
+//        row.getElement().addClass("table-bordered");
+      },
       columns:[
-        {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true,                  cellClick:function(e, cell){updateTableOne()}, },
-        {title:"Global ID",  field:"gid",           align:"left",   width:100, sortable:"true", sorter:"number",  formatter:"plaintext",                 editor:"input", cellClick:function(e, cell){console.log("cell click : gid")}, },
-        {title:"email",      field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext",                 editor:"input", cellClick:function(e, cell){console.log("cell click : user_name")}, },
-        {title:"貸し出し日", field:"date",          align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                 cellClick:function(e, cell){console.log("cell click : date")}, },
-        {title:"返却期限",   field:"deadline",      align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                 cellClick:function(e, cell){console.log("cell click : deadline")}, },
+        {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true,                                                   cellClick:function(e, cell){updateTableOne()}, },
+        {title:"Global ID",  field:"gid",           align:"left",   width:100, sortable:"true", sorter:"number",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : gid")}, },
+        {title:"email",      field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : user_name")}, },
+        {title:"貸し出し日", field:"date",          align:"center", width:110, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                                                  cellClick:function(e, cell){console.log("cell click : date")}, },
+        {title:"返却期限",   field:"deadline",      align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                                                  cellClick:function(e, cell){console.log("cell click : deadline")}, },
         {title:"残日数",     field:"progress",      align:"left",   width:80,                   sorter:"number",  formatter:"progress",  },
         {title:"Rating",     field:"rating",        align:"center", width:120,                                    formatter:"star",      editable:true,  editor:true, formatterParams:{stars:6}, cellEdited:function(e, cell){updateTableOne()}, },
         {title:"貸出回数",   field:"count",         align:"left",   width:120,                  sorter:"number",  formatter:"progress",  },
@@ -105,14 +115,24 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
       paginationSize:15,
       movableColumns:true,
       initialSort:[
-          {column:"title", dir:"asc"},
+        {column:"title", dir:"asc"},
       ],
+      rowFormatter:function(row){
+        //row - row component
+        var data = row.getData();
+
+        if(data.gid != ""){
+          row.getElement().css({"background-color":"#424242"});
+          row.getElement().css({"color":"#f5f5f5"});
+        }
+//        row.getElement().addClass("table-bordered");
+      },
       columns:[
-        {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true,                  cellClick:function(e, cell){updateTableMany()}, },
-        {title:"Global ID",  field:"gid",           align:"left",   width:100, sortable:"true", sorter:"number",  formatter:"plaintext",                 editor:"input", cellClick:function(e, cell){console.log("cell click : gid")}, },
-        {title:"email",      field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext",                 editor:"input", cellClick:function(e, cell){console.log("cell click : user_name")}, },
-        {title:"貸し出し日", field:"date",          align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                 cellClick:function(e, cell){console.log("cell click : date")}, },
-        {title:"返却期限",   field:"deadline",      align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                 cellClick:function(e, cell){console.log("cell click : deadline")}, },
+        {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true,                                                   cellClick:function(e, cell){updateTableOne()}, },
+        {title:"Global ID",  field:"gid",           align:"left",   width:100, sortable:"true", sorter:"number",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : gid")}, },
+        {title:"email",      field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : user_name")}, },
+        {title:"貸し出し日", field:"date",          align:"center", width:110, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                                                  cellClick:function(e, cell){console.log("cell click : date")}, },
+        {title:"返却期限",   field:"deadline",      align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                                                  cellClick:function(e, cell){console.log("cell click : deadline")}, },
         {title:"残日数",     field:"progress",      align:"left",   width:80,                   sorter:"number",  formatter:"progress",  },
         {title:"Rating",     field:"rating",        align:"center", width:120,                                    formatter:"star",      editable:true,  editor:true, formatterParams:{stars:6}, cellEdited:function(e, cell){updateTableMany()}, },
         {title:"貸出回数",   field:"count",         align:"left",   width:120,                  sorter:"number",  formatter:"progress",  },

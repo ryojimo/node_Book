@@ -103,6 +103,7 @@ DataBooks.prototype.UpdateMDDocData = function( collection, id, data ){
     // コレクションを取得する
     var clo = dbo.collection( collection );
 
+    var query = {'_id':ObjectID(id)};
     var newvalues = { $set: {status   : data.status,
                              gid      : data.gid,
                              user_name: data.user_name,
@@ -117,7 +118,7 @@ DataBooks.prototype.UpdateMDDocData = function( collection, id, data ){
   console.log( "[DataBooks.js] newvalues = " + JSON.stringify(newvalues) );
 
     // doc をデータベースに insert する
-    clo.updateOne( {'_id':ObjectID(id)}, newvalues, function(err, res) {
+    clo.updateOne( query, newvalues, function(err, res) {
       if( err ){
         throw err;
       }

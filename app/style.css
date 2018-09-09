@@ -21,6 +21,14 @@ Author URI:  ---
     width: 40% !important;
 }
 
+.tabulator-background
+{
+    color: #000000;
+    background-color: #FFFDE7;
+
+    border:0.5px solid #BDBDBD;
+}
+
 
 /*-----------------------------------------------------------------------------
  * <body> selector
@@ -65,4 +73,5 @@ footer a:hover {
   width: 83%;
   height: 300px;
 }
+
 
