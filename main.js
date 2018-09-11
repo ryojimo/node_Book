@@ -153,14 +153,15 @@ io.sockets.on( 'connection', function( socket ){
   socket.on( 'C_to_S_UPDATE', function( data ){
     console.log( "[main.js] " + 'C_to_S_UPDATE' );
     console.log( "[main.js] data.which = " + data.which );
-    console.log( "[main.js] data.value = " + JSON.stringify(data.value) );
+//    console.log( "[main.js] data.value = " + JSON.stringify(data.value) );
 
+    var ret = false;
     var collection = data.which;
 
     var obj = books.GetMDDocData( collection, function( err, data_org ){
       console.log( "[main.js] err     = " + err );
 
-      console.log( "[main.js] data_org = " + JSON.stringify(data_org) );
+//      console.log( "[main.js] data_org = " + JSON.stringify(data_org) );
       console.log( "[main.js] data.value.length = " + data.value.length );
       for(let i = 0; i < data.value.length; i++){
         if( data.value[i].gid       != data_org[i].gid &&
@@ -180,15 +181,21 @@ io.sockets.on( 'connection', function( socket ){
           }
 
           console.log( "[main.js] data.value[" + i + "] = " + JSON.stringify(data.value[i]) );
-          var obj = books.UpdateMDDocData( collection, data.value[i]._id, data.value[i] );
+          if( data.value[i].comment.match(/禁持出/) ){
+            ret = false;
+          } else {
+            ret = true;
+            var obj = books.UpdateMDDocData( collection, data.value[i]._id, data.value[i] );
+          }
         } else if( data.value[i].rating != data_org[i].rating ){
           console.log( "[main.js] data.value[" + i + "] = " + JSON.stringify(data.value[i]) );
+          ret = true;
           var obj = books.UpdateMDDocData( collection, data.value[i]._id, data.value[i] );
         }
       }
 
 //      console.log( "[main.js] doc     = " + JSON.stringify(data.value) );
-      io.sockets.emit( 'S_to_C_UPDATE_DONE', {ret:true, which:collection, value:data.value} );
+      io.sockets.emit( 'S_to_C_UPDATE_DONE', {ret:ret, which:collection, value:data.value} );
     });
   });
 

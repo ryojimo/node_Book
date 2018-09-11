@@ -65,7 +65,7 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
       addRowPos:"top",
       history:true,
       pagination:"local",
-      paginationSize:15,
+      paginationSize:1000,
       movableColumns:true,
       initialSort:[
         {column:"title", dir:"asc"},
@@ -84,6 +84,7 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
         {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true,                                                   cellClick:function(e, cell){updateTableOne()}, },
         {title:"Global ID",  field:"gid",           align:"left",   width:100, sortable:"true", sorter:"number",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : gid")}, },
         {title:"email",      field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : user_name")}, },
+        {title:"備考",       field:"comment",       align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext", editable:true,  },
         {title:"貸し出し日", field:"date",          align:"center", width:110, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                                                  cellClick:function(e, cell){console.log("cell click : date")}, },
         {title:"返却期限",   field:"deadline",      align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                                                  cellClick:function(e, cell){console.log("cell click : deadline")}, },
         {title:"残日数",     field:"progress",      align:"left",   width:80,                   sorter:"number",  formatter:"progress",  },
@@ -97,7 +98,6 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
         {title:"言語",       field:"language",      align:"left",   width:100, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
         {title:"カテゴリー", field:"category",      align:"left",   width:200, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
         {title:"出版形態",   field:"publication",   align:"left",   width:100, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
-        {title:"備考",       field:"comment",       align:"left",   width:200, sortable:"true", sorter:"string",  formatter:"plaintext", editable:true,  },
       ],
     });
 
@@ -112,7 +112,7 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
       addRowPos:"top",
       history:true,
       pagination:"local",
-      paginationSize:15,
+      paginationSize:1000,
       movableColumns:true,
       initialSort:[
         {column:"title", dir:"asc"},
@@ -131,6 +131,7 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
         {title:"状態",       field:"status",        align:"center", width:70,  sortable:"true", sorter:"boolean", formatter:"tickCross", editable:true,                                                   cellClick:function(e, cell){updateTableMany()}, },
         {title:"Global ID",  field:"gid",           align:"left",   width:100, sortable:"true", sorter:"number",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : gid")}, },
         {title:"email",      field:"user_name",     align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext",                 editor:"input", cssClass:"tabulator-background", cellClick:function(e, cell){console.log("cell click : user_name")}, },
+        {title:"備考",       field:"comment",       align:"left",   width:150, sortable:"true", sorter:"string",  formatter:"plaintext", editable:true,  },
         {title:"貸し出し日", field:"date",          align:"center", width:110, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                                                  cellClick:function(e, cell){console.log("cell click : date")}, },
         {title:"返却期限",   field:"deadline",      align:"center", width:100, sortable:"true", sorter:"date",    formatter:"plaintext", editable:false,                                                  cellClick:function(e, cell){console.log("cell click : deadline")}, },
         {title:"残日数",     field:"progress",      align:"left",   width:80,                   sorter:"number",  formatter:"progress",  },
@@ -144,7 +145,6 @@ server.on( 'S_to_C_INIT_DONE', function( data ){
         {title:"言語",       field:"language",      align:"left",   width:100, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
         {title:"カテゴリー", field:"category",      align:"left",   width:200, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
         {title:"出版形態",   field:"publication",   align:"left",   width:100, sortable:"true", sorter:"string",  formatter:"plaintext", editable:false, },
-        {title:"備考",       field:"comment",       align:"left",   width:200, sortable:"true", sorter:"string",  formatter:"plaintext", editable:true,  },
       ],
     });
 
@@ -160,10 +160,14 @@ server.on( 'S_to_C_UPDATE_DONE', function( data ){
   console.log( "[app.js] data.which = " + data.which );
   //console.log( "[app.js] data.value = " + JSON.stringify(data.value) );
 
-  if( data.which == 'one_2018_09' ){
-    $("#tabulator-table-one").tabulator( "setData", data.value );
-  } else if( data.which == 'many_2018_09' ){
-    $("#tabulator-table-many").tabulator( "setData", data.value );
+  if( data.ret == false ){
+    alert( "この書籍は持ち出し禁止です。" );
+  } else {
+    if( data.which == 'one_2018_09' ){
+      $("#tabulator-table-one").tabulator( "setData", data.value );
+    } else if( data.which == 'many_2018_09' ){
+      $("#tabulator-table-many").tabulator( "setData", data.value );
+    }
   }
 });
 
