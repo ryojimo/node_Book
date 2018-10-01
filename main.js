@@ -11,6 +11,7 @@ var fs       = require( 'fs' );
 var colors   = require( 'colors' );
 require( 'date-utils' );
 var schedule = require( 'node-schedule' );
+var express  = require( 'express' );
 
 const DataBooks   = require( './js/DataBooks' );
 
@@ -19,7 +20,13 @@ const DataBooks   = require( './js/DataBooks' );
 var now = new Date();
 console.log( "[main.js] " + now.toFormat("YYYY年MM月DD日 HH24時MI分SS秒").rainbow );
 console.log( "[main.js] " + "ver.01 : app.js".rainbow );
-console.log( "[main.js] " + "access to http://localhost:4002" );
+console.log( "[main.js] " + "access to http://localhost:7000" );
+
+// Express オブジェクトを生成
+var ex_app = express();
+var ex_server = ex_app.listen( 7001, function(){
+    console.log( "[main.js] " + "Node.js is listening to PORT:" + ex_server.address().port );
+});
 
 // サーバー・オブジェクトを生成
 var server = http.createServer();
@@ -28,7 +35,7 @@ var server = http.createServer();
 server.on( 'request', doRequest );
 
 // 待ち受けスタート
-server.listen( process.env.VMC_APP_PORT || 4002 );
+server.listen( process.env.VMC_APP_PORT || 7000 );
 console.log( "[main.js] Server running!" );
 
 // request イベント処理
@@ -104,6 +111,25 @@ startSystem();
 function startSystem() {
   console.log( "[main.js] startSystem()" );
 };
+
+
+//-----------------------------------------------------------------------------
+// クライアントからコネクションが来た時の処理関数 ( Express )
+//-----------------------------------------------------------------------------
+ex_app.get("/api/:which/:gid", function(req, res, next){
+  console.log( "[main.js] ex_app.get( \"/api/gid/:gid\" )" );
+  console.log( "[main.js] which = " + req.params.which );
+  console.log( "[main.js] gid   = " + req.params.gid );
+
+  var collection = req.params.which;
+  var query = { 'gid': req.params.gid };
+
+  var obj = books.QueryMDDocData( collection, query, function( err, doc ){
+    console.log( "[main.js] err     = " + err );
+    console.log( "[main.js] doc     = " + JSON.stringify(doc) );
+    res.json( doc );
+  });
+});
 
 
 //-----------------------------------------------------------------------------

@@ -79,6 +79,51 @@ DataBooks.prototype.GetMDDocData = function( collection, callback ){
 
 
 /**
+ * コレクションに含まれる全ドキュメントを取得する
+ * @param {string} collection - 対象の MongoDB コレクション名
+ * @param {Object.<string, string>} query - JSON 文字列
+ * @param {obj} callback - データを取得するためのコールバック関数
+ * @return {void}
+ * @example
+ * GetMDDocData( '{...}' );
+*/
+DataBooks.prototype.QueryMDDocData = function( collection, query, callback ){
+  console.log( "[DataBooks.js] QueryMDDocData()" );
+  console.log( "[DataBooks.js] collection = " + collection );
+  console.log( "[DataBooks.js] query      = " + JSON.stringify(query) );
+
+  MongoClient.connect( this.mongo_url, function(err, db) {
+    if( err ){
+      throw err;
+    }
+
+    // データベースを取得する
+    var dbo = db.db( 'books' );
+
+    // コレクションを取得する
+    var clo = dbo.collection( collection );
+
+    clo.find( query ).toArray( function(err, documents){
+      try{
+        if (err){
+          throw err;
+        } else {
+          db.close();
+          console.log( "[DataPersons.js] documents.length = " + documents.length );
+          console.log( "[DataPersons.js] documents        = " + JSON.stringify(documents) );
+          callback( true, documents );
+        }
+      }
+      catch( e ){
+        console.log( "[DataPersons.js] e = " + e );
+        callback( false, documents );
+      }
+    });
+  });
+}
+
+
+/**
  * 指定した MongoDB コレクション名の指定したドキュメントを更新する。
  * @param {string} collection - 対象の MongoDB コレクション名
  * @param {Object.<string, string>} data - JSON 文字列

@@ -6,7 +6,7 @@
 //var sv_ip   = 'book.rp.lfx.sony.co.jp';     // node.js server の IP アドレス
 //var sv_ip   = '43.2.100.159';             // node.js server の IP アドレス
 var sv_ip   = '192.168.91.11';           // node.js server の IP アドレス
-var sv_port = 4002;                         // node.js server の port 番号
+var sv_port = 7000;                         // node.js server の port 番号
 
 var server = io.connect( 'http://' + sv_ip + ':' + sv_port ); //ローカル
 
