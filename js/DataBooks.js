@@ -34,15 +34,15 @@ var DataBooks = function(){
 
 
 /**
- * 指定した MongoDB コレクション名の情報を取得する。
+ * 指定した MongoDB コレクション名の全ドキュメントを取得する。
  * @param {string} collection - 対象の MongoDB コレクション名
- * @param {function(boolean, Object.<string, number>)} callback - データを取得するためのコールバック関数
+ * @param {function(boolean, Object)} callback - データを取得するためのコールバック関数
  * @return {void}
  * @example
- * GetMDDocData( callback );
+ * GetAllDocs( 'one_2018_09'. callback );
 */
-DataBooks.prototype.GetMDDocData = function( collection, callback ){
-  console.log( "[DataBooks.js] GetMDDocData()" );
+DataBooks.prototype.GetAllDocs = function( collection, callback ){
+  console.log( "[DataBooks.js] GetAllDocs()" );
   console.log( "[DataBooks.js] collection = " + collection );
 
   MongoClient.connect( this.mongo_url, function(err, db) {
@@ -79,16 +79,16 @@ DataBooks.prototype.GetMDDocData = function( collection, callback ){
 
 
 /**
- * コレクションに含まれる全ドキュメントを取得する
+ * コレクションに含まれる全ドキュメントに対して query を問い合わせる
  * @param {string} collection - 対象の MongoDB コレクション名
- * @param {Object.<string, string>} query - JSON 文字列
- * @param {obj} callback - データを取得するためのコールバック関数
+ * @param {Object} query - JSON 文字列
+ * @param {function(boolean, Object)} callback - データを取得するためのコールバック関数
  * @return {void}
  * @example
- * GetMDDocData( '{...}' );
+ * Query( 'one_2018_09', {'gid': 0000114347}, function( err, doc ){} );
 */
-DataBooks.prototype.QueryMDDocData = function( collection, query, callback ){
-  console.log( "[DataBooks.js] QueryMDDocData()" );
+DataBooks.prototype.Query = function( collection, query, callback ){
+  console.log( "[DataBooks.js] Query()" );
   console.log( "[DataBooks.js] collection = " + collection );
   console.log( "[DataBooks.js] query      = " + JSON.stringify(query) );
 
@@ -109,13 +109,13 @@ DataBooks.prototype.QueryMDDocData = function( collection, query, callback ){
           throw err;
         } else {
           db.close();
-          console.log( "[DataPersons.js] documents.length = " + documents.length );
-          console.log( "[DataPersons.js] documents        = " + JSON.stringify(documents) );
+          console.log( "[DataBooks.js] documents.length = " + documents.length );
+          console.log( "[DataBooks.js] documents        = " + JSON.stringify(documents) );
           callback( true, documents );
         }
       }
       catch( e ){
-        console.log( "[DataPersons.js] e = " + e );
+        console.log( "[DataBooks.js] e = " + e );
         callback( false, documents );
       }
     });
@@ -126,13 +126,14 @@ DataBooks.prototype.QueryMDDocData = function( collection, query, callback ){
 /**
  * 指定した MongoDB コレクション名の指定したドキュメントを更新する。
  * @param {string} collection - 対象の MongoDB コレクション名
- * @param {Object.<string, string>} data - JSON 文字列
+ * @param {string} id - 対象の MongoDB のドキュメント ID
+ * @param {Object} data - 新しいデータ
  * @return {void}
  * @example
- * UpdateMDDoc( '{...}' );
+ * UpdateDoc( 'one_2018_09', '', {} );
 */
-DataBooks.prototype.UpdateMDDocData = function( collection, id, data ){
-  console.log( "[DataBooks.js] UpdateMDDocData()" );
+DataBooks.prototype.UpdateDoc = function( collection, id, data ){
+  console.log( "[DataBooks.js] UpdateDoc()" );
   console.log( "[DataBooks.js] collection = " + collection );
   console.log( "[DataBooks.js] id = " + id );
   console.log( "[DataBooks.js] data = " + JSON.stringify(data) );
