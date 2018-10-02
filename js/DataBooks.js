@@ -34,44 +34,37 @@ var DataBooks = function(){
 
 
 /**
- * 指定した MongoDB コレクション名の全ドキュメントを取得する。
- * @param {string} collection - 対象の MongoDB コレクション名
+ * 対象の collection の全ドキュメントを取得する。
+ * @param {string} collection - 対象の MongoDB コレクション
  * @param {function(boolean, Object)} callback - データを取得するためのコールバック関数
  * @return {void}
  * @example
- * GetAllDocs( 'one_2018_09'. callback );
+ * getAllDocs( 'one_2018_09', callback );
 */
-DataBooks.prototype.GetAllDocs = function( collection, callback ){
-  console.log( "[DataBooks.js] GetAllDocs()" );
+DataBooks.prototype.getAllDocs = function( collection, callback ){
+  console.log( "[DataBooks.js] getAllDocs()" );
   console.log( "[DataBooks.js] collection = " + collection );
 
-  MongoClient.connect( this.mongo_url, function(err, db) {
+  MongoClient.connect( this.mongo_url, function(err, db){
     if( err ) throw err;
 
-    // データベースを取得する
-    var dbo = db.db( 'books' );
-
-    // コレクションを取得する
-    var clo = dbo.collection( collection );
+    var dbo = db.db( 'books' );             // データベースを取得する
+    var clo = dbo.collection( collection ); // コレクションを取得する
 
     // コレクションに含まれるすべてのドキュメントを取得する
-    clo.find({}).toArray( function(err, documents){
+    clo.find( {} ).toArray( function(err, docs){
       try{
-        if( err ){
-          throw err;
-        }
-
-        var len = documents.length;
-        console.log( "[DataBooks.js] len = " + len );
+        if( err ) throw err;
 
         db.close();
-
-//      console.log( documents );
-        callback( true, documents );
+        console.log( "[DataBooks.js] docs.length = " + docs.length );
+//        console.log( "[DataBooks.js] docs        = " + JSON.stringify(docs) );
+        callback( true, docs );
       }
       catch( e ){
-        console.log( "[DataBooks.js] e = " + e );
-        callback( false, documents );
+        console.log( "[DataBooks.js] e = " + e + " : " + e.message );
+        db.close();
+        callback( false, docs );
       }
     });
   });
@@ -79,44 +72,38 @@ DataBooks.prototype.GetAllDocs = function( collection, callback ){
 
 
 /**
- * コレクションに含まれる全ドキュメントに対して query を問い合わせる
- * @param {string} collection - 対象の MongoDB コレクション名
- * @param {Object} query - JSON 文字列
+ * 対象の collection の全ドキュメントに対して query に一致するドキュメントを問い合わせる。
+ * @param {string} collection - 対象の MongoDB コレクション
+ * @param {Object} query - 問い合わせの情報
  * @param {function(boolean, Object)} callback - データを取得するためのコールバック関数
  * @return {void}
  * @example
- * Query( 'one_2018_09', {'gid': 0000114347}, function( err, doc ){} );
+ * query( 'one_2018_09', {'gid': 0000114347}, function( err, doc ){} );
 */
-DataBooks.prototype.Query = function( collection, query, callback ){
-  console.log( "[DataBooks.js] Query()" );
+DataBooks.prototype.query = function( collection, query, callback ){
+  console.log( "[DataBooks.js] query()" );
   console.log( "[DataBooks.js] collection = " + collection );
   console.log( "[DataBooks.js] query      = " + JSON.stringify(query) );
 
   MongoClient.connect( this.mongo_url, function(err, db) {
-    if( err ){
-      throw err;
-    }
+    if( err ) throw err;
 
-    // データベースを取得する
-    var dbo = db.db( 'books' );
+    var dbo = db.db( 'books' );             // データベースを取得する
+    var clo = dbo.collection( collection ); // コレクションを取得する
 
-    // コレクションを取得する
-    var clo = dbo.collection( collection );
-
-    clo.find( query ).toArray( function(err, documents){
+    clo.find( query ).toArray( function(err, docs){
       try{
-        if (err){
-          throw err;
-        } else {
-          db.close();
-          console.log( "[DataBooks.js] documents.length = " + documents.length );
-          console.log( "[DataBooks.js] documents        = " + JSON.stringify(documents) );
-          callback( true, documents );
-        }
+        if( err ) throw err;
+
+        db.close();
+        console.log( "[DataBooks.js] docs.length = " + docs.length );
+//        console.log( "[DataBooks.js] docs        = " + JSON.stringify(docs) );
+        callback( true, docs );
       }
       catch( e ){
-        console.log( "[DataBooks.js] e = " + e );
-        callback( false, documents );
+        console.log( "[DataBooks.js] e = " + e + " : " + e.message );
+        db.close();
+        callback( false, docs );
       }
     });
   });
@@ -124,33 +111,28 @@ DataBooks.prototype.Query = function( collection, query, callback ){
 
 
 /**
- * 指定した MongoDB コレクション名の指定したドキュメントを更新する。
- * @param {string} collection - 対象の MongoDB コレクション名
- * @param {string} id - 対象の MongoDB のドキュメント ID
+ * 対象の collection の id で指定したドキュメントを更新する。
+ * @param {string} collection - 対象の MongoDB コレクション
+ * @param {string} id - 対象の MongoDB ドキュメントの ID
  * @param {Object} data - 新しいデータ
  * @return {void}
  * @example
- * UpdateDoc( 'one_2018_09', '', {} );
+ * updateDoc( 'one_2018_09', '', {} );
 */
-DataBooks.prototype.UpdateDoc = function( collection, id, data ){
-  console.log( "[DataBooks.js] UpdateDoc()" );
+DataBooks.prototype.updateDoc = function( collection, id, data ){
+  console.log( "[DataBooks.js] updateDoc()" );
   console.log( "[DataBooks.js] collection = " + collection );
   console.log( "[DataBooks.js] id = " + id );
   console.log( "[DataBooks.js] data = " + JSON.stringify(data) );
 
-  MongoClient.connect( this.mongo_url, function(err, db) {
-    if( err ){
-      throw err;
-    }
+  MongoClient.connect( this.mongo_url, function(err, db){
+    if( err ) throw err;
 
-    // データベースを取得する
-    var dbo = db.db( 'books' );
-
-    // コレクションを取得する
-    var clo = dbo.collection( collection );
+    var dbo = db.db( 'books' );             // データベースを取得する
+    var clo = dbo.collection( collection ); // コレクションを取得する
 
     var query = {'_id':ObjectID(id)};
-    var newvalues = { $set: {status   : data.status,
+    var newdata = { $set: {status   : data.status,
                              gid      : data.gid,
                              user_name: data.user_name,
                              date     : data.date,
@@ -161,35 +143,22 @@ DataBooks.prototype.UpdateDoc = function( collection, id, data ){
                              comment  : data.comment}
                     };
 
-  console.log( "[DataBooks.js] newvalues = " + JSON.stringify(newvalues) );
+    console.log( "[DataBooks.js] newdata = " + JSON.stringify(newdata) );
 
     // doc をデータベースに insert する
-    clo.updateOne( query, newvalues, function(err, res) {
-      if( err ){
-        throw err;
+    clo.updateOne( query, newdata, function(err, res){
+      try{
+        if( err ) throw err;
+
+        db.close();
       }
-      db.close();
+      catch( e ){
+        console.log( "[DataBooks.js] e = " + e + " : " + e.message );
+        db.close();
+      }
     });
   });
 }
-
-
-/**
- * 数字が 1 桁の場合に 0 埋めで 2 桁にする
- * @param {number} num - 数値
- * @return {number} num - 0 埋めされた 2 桁の数値
- * @example
- * toDoubleDigits( 8 );
-*/
-var toDoubleDigits = function( num ){
-  console.log( "[DataBooks.js] toDoubleDigits()" );
-  console.log( "[DataBooks.js] num = " + num );
-  num += '';
-  if( num.length === 1 ){
-    num = '0' + num;
-  }
-  return num;
-};
 
 
 module.exports = DataBooks;

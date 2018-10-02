@@ -124,7 +124,7 @@ ex_app.get("/api/:which/:gid", function(req, res, next){
   var collection = req.params.which;
   var query = { 'gid': req.params.gid };
 
-  var obj = books.Query( collection, query, function( err, doc ){
+  var obj = books.query( collection, query, function( err, doc ){
     console.log( "[main.js] err     = " + err );
     console.log( "[main.js] doc     = " + JSON.stringify(doc) );
     res.json( doc );
@@ -161,7 +161,7 @@ io.sockets.on( 'connection', function( socket ){
 
     var collection = data.which;
 
-    var obj = books.GetAllDocs( collection, function( err, data ){
+    var obj = books.getAllDocs( collection, function( err, data ){
       console.log( "[main.js] err     = " + err );
 //      console.log( "[main.js] doc     = " + JSON.stringify(data) );
 
@@ -184,7 +184,7 @@ io.sockets.on( 'connection', function( socket ){
     var ret = false;
     var collection = data.which;
 
-    var obj = books.GetAllDocs( collection, function( err, data_org ){
+    var obj = books.getAllDocs( collection, function( err, data_org ){
       console.log( "[main.js] err     = " + err );
 
 //      console.log( "[main.js] data_org = " + JSON.stringify(data_org) );
@@ -211,12 +211,12 @@ io.sockets.on( 'connection', function( socket ){
             ret = false;
           } else {
             ret = true;
-            var obj = books.UpdateDoc( collection, data.value[i]._id, data.value[i] );
+            var obj = books.updateDoc( collection, data.value[i]._id, data.value[i] );
           }
         } else if( data.value[i].rating != data_org[i].rating ){
           console.log( "[main.js] data.value[" + i + "] = " + JSON.stringify(data.value[i]) );
           ret = true;
-          var obj = books.UpdateDoc( collection, data.value[i]._id, data.value[i] );
+          var obj = books.updateDoc( collection, data.value[i]._id, data.value[i] );
         }
       }
 
