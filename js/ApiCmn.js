@@ -20,14 +20,18 @@ require('date-utils');
 class ApiCmn {
   /**
    * 現在の日付を YYYY-MM-DD 形式で取得する
-   * @param {void}
+   * @param {number} offset - 現在の日付に加える offset 日数。引数に何も指定しなければ、本関数は現在の日付を返す。
    * @return {string} ret - 日付
    * @example
    * yyyymmdd();
   */
-  yyyymmdd(){
+  yyyymmdd( offset = 0 ){
     console.log("[ApiCmn.js] yyyymmdd()");
+    console.log("[ApiCmn.js] offset = " + offset);
+
     let date = new Date();
+
+    date.setDate(date.getDate() + offset);
 
     let yyyy = date.getFullYear();
     let mm   = ('0' + (date.getMonth() + 1)).slice(-2);

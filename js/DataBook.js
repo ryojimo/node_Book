@@ -10,8 +10,8 @@
 require('date-utils');
 let fs = require('fs');
 
-const ApiFileSystem = require('./ApiFileSystem');
-let g_apiFileSystem = new ApiFileSystem();
+const ApiCmn = require('./ApiCmn');
+let g_apiCmn = new ApiCmn();
 
 
 const MAX_DATE = 14;
@@ -94,18 +94,10 @@ class DataBook {
     this.book.status = true;
     this.book.gid = gid;
     this.book.email = email;
-
-    let date = new Date();
-    let yyyy = date.getFullYear();
-    let mm   = ('0' + (date.getMonth() + 1)).slice(-2);
-    let dd   = ('0' +  date.getDate()      ).slice(-2);
-    this.book.date = yyyy + '-' + mm + '-' + dd;
-
-    this.book.deadline = yyyy + '-' + mm + '-' + dd + MAX_DATE;
+    this.book.date = g_apiCmn.yyyymmdd();
+    this.book.deadline = g_apiCmn.yyyymmdd(MAX_DATE);
     this.book.progress = MAX_DATE;
     this.book.count++;
-
-    g_apiFileSystem.write('/media/pi/USBDATA/book/' +  this.book._id + '.txt', this.book);
   }
 
 
@@ -125,8 +117,6 @@ class DataBook {
     this.book.date = "";
     this.book.deadline = "";
     this.book.progress = 0;
-
-    g_apiFileSystem.delete('/media/pi/USBDATA/book/' +  this.book._id + '.txt');
   }
 
 
@@ -141,8 +131,6 @@ class DataBook {
     console.log("[DataBook.js] updateProgress()");
 
     this.book.progress--;
-
-    g_apiFileSystem.write('/media/pi/USBDATA/book/' +  this.book._id + '.txt', this.book);
   }
 
 

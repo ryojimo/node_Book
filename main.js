@@ -238,7 +238,8 @@ io.sockets.on('connection', function(socket) {
       for(let br of g_arrayObjBooksRent) {
         let jsonRent = br.get();
 
-        if(jsonObj._id == jsonRent._id && (jsonObj.gid != jsonRent.gid || jsonObj.email != jsonRent.email)) {
+//      if(jsonObj._id == jsonRent._id && (jsonObj.gid != jsonRent.gid || jsonObj.email != jsonRent.email)) {
+        if(jsonObj._id == jsonRent._id) {
           g_arrayObjBooksOne[i].set(jsonRent);
         }
       }
@@ -250,7 +251,8 @@ io.sockets.on('connection', function(socket) {
       for(let br of g_arrayObjBooksRent) {
         let jsonRent = br.get();
 
-        if(jsonObj._id == jsonRent._id && (jsonObj.gid != jsonRent.gid || jsonObj.email != jsonRent.email)) {
+//      if(jsonObj._id == jsonRent._id && (jsonObj.gid != jsonRent.gid || jsonObj.email != jsonRent.email)) {
+        if(jsonObj._id == jsonRent._id) {
           g_arrayObjBooksMany[i].set(jsonRent);
         }
       }
@@ -281,43 +283,11 @@ io.sockets.on('connection', function(socket) {
     let ret = true;
 
     g_arrayObjBooksOne.forEach(function(value, index, array) {
-      let jsonObj = value.get();
-
-      for(let cur of data.booksOne) {
-        if(cur._id == jsonObj._id && (cur.gid != jsonObj.gid || cur.email != jsonObj.email)) {
-          if(cur.comment.match(/禁持出/)) {
-            ret = false;
-          } else {
-            ret = true;
-
-            if(cur.gid == "" || cur.email == "") {
-              array[index].returnBook();
-            } else {
-              array[index].rentBook(cur.gid, cur.email);
-            }
-          }
-        }
-      }
+      ret = update(value, index, array, data.booksOne);
     });
 
     g_arrayObjBooksMany.forEach(function(value, index, array) {
-      let jsonObj = value.get();
-
-      for(let cur of data.booksMany) {
-        if(cur._id == jsonObj._id && (cur.gid != jsonObj.gid || cur.email != jsonObj.email)) {
-          if(cur.comment.match(/禁持出/)) {
-            ret = false;
-          } else {
-            ret = true;
-
-            if(cur.gid == "" || cur.email == "") {
-              array[index].returnBook();
-            } else {
-              array[index].rentBook(cur.gid, cur.email);
-            }
-          }
-        }
-      }
+      ret = update(value, index, array, data.booksMany);
     });
 
     let one = new Array();
@@ -338,85 +308,41 @@ io.sockets.on('connection', function(socket) {
 
 
 /**
- * 残日数を取得する
- * @param {number} offset - "2018-09-06" のような形式の文字列
- * @return {string} day - 残日数
+ * 更新する。
+ * @param {object} value - DataBook オブジェクト
+ * @param {number} index - array のインデックス番号
+ * @param {object} array - DataBook オブジェクトの配列
+ * @param {object} target - 対象の JSON オブジェクト
+ * @return {boolean} ret - 成功時: true, 失敗時: false を返す。
  * @example
- * getRestDay("2018-09-06");
+ * update("2018-09-06");
 */
-let getRestDay = function(deadline) {
-  console.log("[main.js] getRestDay()");
-  let now = new Date();
-  let tgday = deadline.replace('-', '/');
-  let days = Math.ceil((Date.parse(tgday) - now.getTime()) / (24 * 60 * 60 * 1000));
+let update = function(value, index, array, target) {
+//  console.log("[main.js] update()");
+  let jsonObj = value.get();
+  let ret = true;
 
-  console.log("[main.js] now   = " + now);
-  console.log("[main.js] tgday = " + tgday);
-  console.log("[main.js] days  = " + days);
+  for(let cur of target) {
+    if(cur._id == jsonObj._id && (cur.gid != jsonObj.gid || cur.email != jsonObj.email)) {
+      if(cur.comment.match(/禁持出/)) {
+        ret = false;
+      } else {
+        ret = true;
 
-  return days;
-};
+        if(cur.gid == "" || cur.email == "") {
+          array[index].returnBook();
+        } else {
+          array[index].rentBook(cur.gid, cur.email);
+        }
 
-
-/**
- * 数字が 1 桁の場合に 0 埋めで 2 桁にする
- * @param {number} num - 数値
- * @return {number} num - 0 埋めされた 2 桁の数値
- * @example
- * toDoubleDigits(8);
-*/
-let toDoubleDigits = function(num) {
-//  console.log("[main.js] toDoubleDigits()");
-//  console.log("[main.js] num = " + num);
-  num += '';
-  if(num.length === 1) {
-    num = '0' + num;
+        let info = array[index].get();
+        let filename = '/media/pi/USBDATA/book/' + info._id + '.txt';
+        g_apiFileSystem.write(filename, info);
+      }
+    }
   }
-  return num;
-};
 
-
-/**
- * 現在の日付に offset を足した日付を YYYY-MM-DD 形式で取得する
- * @param {number} offset - 数値
- * @return {string} day - 日付
- * @example
- * yyyymmdd();
-*/
-let yyyymmdd = function(offset) {
-//  console.log("[main.js] yyyymmdd()");
-  let date = new Date();
-
-  date.setDate(date.getDate() + offset);
-
-  let yyyy = date.getFullYear();
-  let mm   = toDoubleDigits(date.getMonth() + 1);
-  let dd   = toDoubleDigits(date.getDate());
-
-  let day = yyyy + '-' + mm + '-' + dd;
-//  console.log("[main.js] day = " + day);
-  return day;
-};
-
-
-/**
- * 現在の時刻を HH:MM:SS 形式で取得する
- * @param {void}
- * @return {string} time - 時刻
- * @example
- * hhmmss();
-*/
-let hhmmss = function() {
-  console.log("[main.js] hhmmss()");
-  let date = new Date();
-
-  let hour = toDoubleDigits(date.getHours());
-  let min  = toDoubleDigits(date.getMinutes());
-  let sec  = toDoubleDigits(date.getSeconds());
-
-  let time = hour + ':' + min + ':' + sec;
-  console.log("[main.js] time = " + time);
-  return time;
+  return ret;
 };
 
 
