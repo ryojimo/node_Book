@@ -8,7 +8,6 @@
 
 // 必要なライブラリをロード
 require('date-utils');
-let fs = require('fs');
 
 const ApiCmn = require('./ApiCmn');
 let g_apiCmn = new ApiCmn();
@@ -27,7 +26,7 @@ const MAX_DATE = 14;
 class DataBook {
 
   constructor(jsonObj) {
-    this.book = {
+    this.data = {
       status: false,      // @type {bool}   : 貸出状態。貸し出されると true にセット。
       gid: "",            // @type {string} : 現在借りている人の Global ID
       email: "",          // @type {string} : 現在借りている人の email アドレス
@@ -48,33 +47,31 @@ class DataBook {
       comment: "",        // @type {string} : 備考
     };
 
-    this.book = jsonObj;
+    this.data = jsonObj;
   }
 
 
   /**
-   * this.book を取得する。
+   * this.data を取得する。
    * @param {void}
-   * @return {object} - this.book
+   * @return {object} - this.data
    * @example
    * get();
   */
   get() {
-//    console.log("[DataBook.js] get()");
-    return this.book;
+    return this.data;
   }
 
 
   /**
-   * this.book に値をセットする。
+   * this.data に値をセットする。
    * @param {object} - セットする json 形式のデータ
    * @return {void}
    * @example
    * set();
   */
   set(jsonObj) {
-//    console.log("[DataBook.js] set()");
-    this.book = jsonObj;
+    this.data = jsonObj;
   }
 
 
@@ -91,13 +88,13 @@ class DataBook {
     console.log("[DataBook.js] gid = " + gid);
     console.log("[DataBook.js] email = " + email);
 
-    this.book.status = true;
-    this.book.gid = gid;
-    this.book.email = email;
-    this.book.date = g_apiCmn.yyyymmdd();
-    this.book.deadline = g_apiCmn.yyyymmdd(MAX_DATE);
-    this.book.progress = MAX_DATE;
-    this.book.count++;
+    this.data.status = true;
+    this.data.gid = gid;
+    this.data.email = email;
+    this.data.date = g_apiCmn.yyyymmdd();
+    this.data.deadline = g_apiCmn.yyyymmdd(MAX_DATE);
+    this.data.progress = MAX_DATE;
+    this.data.count++;
   }
 
 
@@ -111,17 +108,17 @@ class DataBook {
   returnBook() {
     console.log("[DataBook.js] returnBook()");
 
-    this.book.status = false;
-    this.book.gid = "";
-    this.book.email = "";
-    this.book.date = "";
-    this.book.deadline = "";
-    this.book.progress = 0;
+    this.data.status = false;
+    this.data.gid = "";
+    this.data.email = "";
+    this.data.date = "";
+    this.data.deadline = "";
+    this.data.progress = 0;
   }
 
 
   /**
-   * this.book.progress を更新する。
+   * this.data.progress を更新する。
    * @param {void}
    * @return {void}
    * @example
@@ -130,7 +127,7 @@ class DataBook {
   updateProgress() {
     console.log("[DataBook.js] updateProgress()");
 
-    this.book.progress--;
+    this.data.progress--;
   }
 
 

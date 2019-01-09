@@ -24,7 +24,7 @@ class ApiFileSystem {
    * @param {string} file - 対象のファイル ( フルパス )
    * @return {object} ret - file から読み出した JSON 形式のデータ
    * @example
-   * let obj = read('/media/pi/USBDATA/2018-01-23_sensor.txt');
+   * let obj = read('/media/pi/USBDATA/sensor/2018-01-23_sensor.txt');
   */
   read(file) {
     console.log("[ApiFileSystem.js] read()");
@@ -56,7 +56,7 @@ class ApiFileSystem {
    * @param {object} jsonObj - 付け加える json 形式のデータ
    * @return {void}
    * @example
-   * append("/media/pi/USBDATA/2018-01-23_sensor.txt", {});
+   * append("/media/pi/USBDATA/sensor/2018-01-23_sensor.txt", {});
   */
   append(file, jsonObj) {
     console.log("[ApiFileSystem.js] append()");
@@ -71,6 +71,11 @@ class ApiFileSystem {
     } catch(err) {
       if(err.code === 'ENOENT') {
         console.log("[ApiFileSystem.js] file does not exist.");
+        try {
+          this.write(file, str);
+        } catch(err) {
+          console.log("[ApiFileSystem.js] error happens.");
+        }
       }
     }
 
@@ -84,7 +89,7 @@ class ApiFileSystem {
    * @param {object} jsonObj - 書き込む json 形式のデータ
    * @return {void}
    * @example
-   * write("/media/pi/USBDATA/2018-01-23_sensor.txt", {});
+   * write("/media/pi/USBDATA/sensor/2018-01-23_sensor.txt", {});
   */
   write(file, jsonObj) {
     console.log("[ApiFileSystem.js] write()");
@@ -110,7 +115,7 @@ class ApiFileSystem {
    * @param {string} file - 対象のファイル ( フルパス )
    * @return {void}
    * @example
-   * delete("/media/pi/USBDATA/2018-01-23_sensor.txt");
+   * delete("/media/pi/USBDATA/sensor/2018-01-23_sensor.txt");
   */
   delete(file) {
     console.log("[ApiFileSystem.js] delete()");

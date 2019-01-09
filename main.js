@@ -9,8 +9,9 @@ let http     = require('http');
 let socketio = require('socket.io');
 let fs       = require('fs');
 let colors   = require('colors');
-require('date-utils');
 let schedule = require('node-schedule');
+require('date-utils');
+
 let Converter = require('csvtojson').Converter;
 
 /*
@@ -18,7 +19,7 @@ let express  = require('express');
 */
 
 const ApiFileSystem = require('./js/ApiFileSystem');
-const DataBook   = require('./js/DataBook');
+const DataBook      = require('./js/DataBook');
 
 
 // Ver. 表示
@@ -99,11 +100,11 @@ let converterMany = new Converter({});
 
 let g_apiFileSystem = new ApiFileSystem();
 
-let g_jsonBooksOne = null;
+let g_jsonBooksOne  = null;
 let g_jsonBooksMany = null;
 let g_jsonBooksRent = new Array();
 
-let g_arrayObjBooksOne = new Array();
+let g_arrayObjBooksOne  = new Array();
 let g_arrayObjBooksMany = new Array();
 let g_arrayObjBooksRent = new Array();
 
