@@ -5,7 +5,7 @@
 */
 //const SV_IP   = 'book.rp.lfx.sony.co.jp';   // node.js server の IP アドレス
 //const SV_IP   = '43.2.100.159';             // node.js server の IP アドレス
-const SV_IP   = '192.168.91.11';            // node.js server の IP アドレス
+const SV_IP   = '192.168.91.112';            // node.js server の IP アドレス
 const SV_PORT = 4002;                       // node.js server の port 番号
 
 let server = io.connect('http://' + SV_IP + ':' + SV_PORT);
@@ -90,6 +90,7 @@ server.on('S_to_C_INIT_DONE', function(data) {
       {title:'言語',       field:'language',      align:'left',   width:100, sortable:'true', sorter:'string',  formatter:'plaintext', editable:false, },
       {title:'カテゴリー', field:'category',      align:'left',   width:200, sortable:'true', sorter:'string',  formatter:'plaintext', editable:false, },
       {title:'出版形態',   field:'publication',   align:'left',   width:100, sortable:'true', sorter:'string',  formatter:'plaintext', editable:false, },
+      {title:'入庫日',     field:'arrival_date',  align:'left',   width:100, sortable:'true', sorter:'string',  formatter:'plaintext', editable:false, },
     ],
   };
 
