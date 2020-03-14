@@ -10,10 +10,10 @@ let socketio = require('socket.io');
 let fs       = require('fs');
 let colors   = require('colors');
 let schedule = require('node-schedule');
+let csv      = require('csvtojson');
 require('date-utils');
 
-let Converter = require('csvtojson').Converter;
-
+const ApiAws        = require('./js/ApiAws');
 const ApiFileSystem = require('./js/ApiFileSystem');
 const DataBook      = require('./js/DataBook');
 
@@ -84,9 +84,7 @@ let io = socketio.listen(server);
 //-----------------------------------------------------------------------------
 // 起動の処理関数
 //-----------------------------------------------------------------------------
-let converterOne  = new Converter({});
-let converterMany = new Converter({});
-
+let g_apiAws        = new ApiAws();
 let g_apiFileSystem = new ApiFileSystem();
 
 let g_jsonBooksOne  = null;
@@ -110,21 +108,60 @@ startSystem();
 function startSystem() {
   console.log("[main.js] startSystem()");
 
-  // BT_books_one.csv を読み出して json 形式の配列データを取得する
-  converterOne.fromFile('./data/BT_books_one.csv')
-  .then((jsonObj)=> {
+  // AWS から書籍一覧の csv ファイルを取得する
+  g_apiAws.download('/home/pi/workspace/node_Book/data/', 'BT_books_one.csv', 'uz.book');
+  g_apiAws.download('/home/pi/workspace/node_Book/data/', 'BT_books_many.csv', 'uz.book');
+
+  // 書籍一覧の csv ファイルを読み出して json 形式の配列データを取得する
+  setTimeout(setBooksOne,  300);  // AWS からファイルを取得するのに時間がかかるので 300ms 待機して setBooksOne() を実行
+  setTimeout(setBooksMany, 400);  // AWS からファイルを取得するのに時間がかかるので 400ms 待機して setBooksMany() を実行
+
+  // 貸出状態になっている本の全情報の json 形式の配列データを取得する
+  setTimeout(setBooksRent, 500);  // AWS からファイルを取得するのに時間がかかるので 500ms 待機して setBooksRent() を実行
+};
+
+
+/**
+ * csv ファイルを読み出して json 形式の配列データを取得する
+ * @param {void}
+ * @return {void}
+ * @example
+ * setBooksOne();
+*/
+function setBooksOne() {
+  console.log("[main.js] setBooksOne()");
+  csv().fromFile('./data/BT_books_one.csv').then((jsonObj)=> {
 //    console.log("[main.js] jsonObj = " + JSON.stringify(jsonObj));
     g_jsonBooksOne = jsonObj;
   });
+}
 
-  // BT_books_many.csv を読み出して json 形式の配列データを取得する
-  converterMany.fromFile('./data/BT_books_many.csv')
-  .then((jsonObj)=> {
+
+/**
+ * csv ファイルを読み出して json 形式の配列データを取得する
+ * @param {void}
+ * @return {void}
+ * @example
+ * setBooksMany();
+*/
+function setBooksMany() {
+  console.log("[main.js] setBooksMany()");
+  csv().fromFile('./data/BT_books_many.csv').then((jsonObj)=> {
 //    console.log("[main.js] jsonObj = " + JSON.stringify(jsonObj));
     g_jsonBooksMany = jsonObj;
   });
+}
 
-  // 貸出状態になっている本の全情報の json 形式の配列データを取得する
+
+/**
+ * 貸出状態になったことがある本の json 形式の配列データを取得する
+ * @param {void}
+ * @return {void}
+ * @example
+ * setBooksRent();
+*/
+function setBooksRent() {
+  console.log("[main.js] setBooksRent()");
   let ret = null;
   let jsonObj = null;
 
@@ -149,7 +186,7 @@ function startSystem() {
       console.log("[main.js] error happens.");
     }
   }
-};
+}
 
 
 //-----------------------------------------------------------------------------

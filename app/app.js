@@ -3,9 +3,9 @@
  * @author       Ryoji Morita
  * @version      0.0.1
 */
-//const SV_IP   = 'book.rp.lfx.sony.co.jp';   // node.js server の IP アドレス
-//const SV_IP   = '43.2.100.159';             // node.js server の IP アドレス
-const SV_IP   = '192.168.91.112';            // node.js server の IP アドレス
+//const SV_IP   = 'book.rp.lfx.sony.co.jp'; // node.js server の IP アドレス
+//const SV_IP   = '43.2.100.159';           // node.js server の IP アドレス
+const SV_IP   = '192.168.91.144';           // node.js server の IP アドレス
 const SV_PORT = 4002;                       // node.js server の port 番号
 
 let server = io.connect('http://' + SV_IP + ':' + SV_PORT);
@@ -57,7 +57,7 @@ server.on('S_to_C_INIT_DONE', function(data) {
     addRowPos:      'top',
     history:        true,
     pagination:     'local',
-    paginationSize: 20,
+    paginationSize: 1000,
     movableColumns: true,
     initialSort:[
       {column:'title', dir:'asc'},
