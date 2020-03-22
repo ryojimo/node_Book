@@ -177,11 +177,11 @@ function setBooksRent() {
   let ret = null;
   let jsonObj = null;
 
-  let filenames = fs.readdirSync('/media/pi/USBDATA/book/');
+  let filenames = fs.readdirSync('/home/pi/workspace/node_Book/data/rent/');
   console.log("[main.js] filenames = " + filenames);
   try {
     for(let value of filenames) {
-      let file = '/media/pi/USBDATA/book/' + value;
+      let file = '/home/pi/workspace/node_Book/data/rent/' + value;
       console.log("[main.js] file = " + file);
 
       fs.statSync(file);
@@ -356,7 +356,7 @@ function update(value, index, array, target) {
         }
 
         let info = array[index].get();
-        let filename = '/media/pi/USBDATA/book/' + info._id + '.json';
+        let filename = '/home/pi/workspace/node_Book/data/rent/' + info._id + '.json';
         g_apiFileSystem.write(filename, info);
       }
     }
