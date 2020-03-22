@@ -95,6 +95,7 @@ let g_arrayObjBooksOne  = new Array();
 let g_arrayObjBooksMany = new Array();
 let g_arrayObjBooksRent = new Array();
 
+
 startSystem();
 
 
@@ -108,16 +109,27 @@ startSystem();
 function startSystem() {
   console.log("[main.js] startSystem()");
 
+  // bucket 'uz.book.rent' を新規作成する
+  // g_apiAws.createBucket('uz.book.rent');
+
   // AWS から書籍一覧の csv ファイルを取得する
   g_apiAws.download('/home/pi/workspace/node_Book/data/', 'BT_books_one.csv', 'uz.book');
   g_apiAws.download('/home/pi/workspace/node_Book/data/', 'BT_books_many.csv', 'uz.book');
 
+  // AWS から貸し出したことのある書籍の json ファイルをすべて取得する
+  g_apiAws.getListObjects('uz.book.rent', function(array) {
+    for(let value of array) {
+      console.log("[ApiAws.js] value = " + value);
+      g_apiAws.download('/home/pi/workspace/node_Book/data/rent/', value, 'uz.book.rent');
+    }
+  });
+
   // 書籍一覧の csv ファイルを読み出して json 形式の配列データを取得する
-  setTimeout(setBooksOne,  300);  // AWS からファイルを取得するのに時間がかかるので 300ms 待機して setBooksOne() を実行
-  setTimeout(setBooksMany, 400);  // AWS からファイルを取得するのに時間がかかるので 400ms 待機して setBooksMany() を実行
+  setTimeout(setBooksOne,  1000);  // AWS からファイルを取得するのに時間がかかるので 1000ms 待機して setBooksOne() を実行
+  setTimeout(setBooksMany, 1100);  // AWS からファイルを取得するのに時間がかかるので 1100ms 待機して setBooksMany() を実行
 
   // 貸出状態になっている本の全情報の json 形式の配列データを取得する
-  setTimeout(setBooksRent, 500);  // AWS からファイルを取得するのに時間がかかるので 500ms 待機して setBooksRent() を実行
+  setTimeout(setBooksRent, 1200);  // AWS からファイルを取得するのに時間がかかるので 1200ms 待機して setBooksRent() を実行
 };
 
 
@@ -189,6 +201,47 @@ function setBooksRent() {
 }
 
 
+/**
+ * json を DataBook オブジェクト配列にセットする
+ * @param {object} json - 書籍情報の json 形式の配列データ
+ * @param {object} array - DataBook オブジェクトの配列
+ * @return {void}
+ * @example
+ * setArrayBooks(g_jsonBooksOne, g_arrayObjBooksOne);
+*/
+function setArrayBooks(json, array) {
+  console.log("[main.js] setArrayBooks()");
+  if(json != null && array.length == 0) {
+    for(let value of json) {
+      let obj = new DataBook(value);
+      array.push(obj);
+    }
+  }
+}
+
+
+/**
+ * 貸出済みのデータがあれば、g_arrayObjBooksOne, g_arrayObjBooksMany の内容を更新する
+ * @param {object} array - DataBook オブジェクトの配列
+ * @return {void}
+ * @example
+ * updateArrayBooks();
+*/
+function updateArrayBooks(array) {
+  console.log("[main.js] updateArrayBooks()");
+  for(let value of array) {
+    let jsonObj = value.get();
+
+    for(let br of g_arrayObjBooksRent) {
+      let jsonRent = br.get();
+      if(jsonObj._id == jsonRent._id) {
+        value.set(jsonRent);
+      }
+    }
+  }
+}
+
+
 //-----------------------------------------------------------------------------
 // クライアントからコネクションが来た時の処理関数
 //-----------------------------------------------------------------------------
@@ -216,50 +269,15 @@ io.sockets.on('connection', function(socket) {
     console.log("[main.js] " + 'C_to_S_INIT');
 
     // Array オブジェクトに DataBook オブジェクトをセット
-    if(g_jsonBooksOne != null && g_arrayObjBooksOne.length == 0) {
-      for(let value of g_jsonBooksOne) {
-        let obj = new DataBook(value);
-        g_arrayObjBooksOne.push(obj);
-      }
-    }
-
-    if(g_jsonBooksMany != null && g_arrayObjBooksMany.length == 0) {
-      for(let value of g_jsonBooksMany) {
-        let obj = new DataBook(value);
-        g_arrayObjBooksMany.push(obj);
-      }
-    }
-
-    if(g_jsonBooksRent.length != 0 && g_arrayObjBooksRent.length == 0) {
-      for(let value of g_jsonBooksRent) {
-        let obj = new DataBook(value);
-        g_arrayObjBooksRent.push(obj);
-      }
-    }
+    setArrayBooks(g_jsonBooksOne, g_arrayObjBooksOne);
+    setArrayBooks(g_jsonBooksMany, g_arrayObjBooksMany);
+    setArrayBooks(g_jsonBooksRent, g_arrayObjBooksRent);
 
     // 既に貸出済みのデータがあれば、g_arrayObjBooksOne, g_arrayObjBooksMany の内容を更新する
-    for(let value of g_arrayObjBooksOne) {
-      let jsonObj = value.get();
+    updateArrayBooks(g_arrayObjBooksOne);
+    updateArrayBooks(g_arrayObjBooksMany);
 
-      for(let br of g_arrayObjBooksRent) {
-        let jsonRent = br.get();
-        if(jsonObj._id == jsonRent._id) {
-          value.set(jsonRent);
-        }
-      }
-    }
-
-    for(let value of g_arrayObjBooksMany) {
-      let jsonObj = value.get();
-
-      for(let br of g_arrayObjBooksRent) {
-        let jsonRent = br.get();
-        if(jsonObj._id == jsonRent._id) {
-          value.set(jsonRent);
-        }
-      }
-    }
-
+    // DataBook オブジェクト配列から、json データの配列を生成する
     let one = new Array();
     let many = new Array();
 
@@ -338,7 +356,7 @@ function update(value, index, array, target) {
         }
 
         let info = array[index].get();
-        let filename = '/media/pi/USBDATA/book/' + info._id + '.txt';
+        let filename = '/media/pi/USBDATA/book/' + info._id + '.json';
         g_apiFileSystem.write(filename, info);
       }
     }

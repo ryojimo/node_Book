@@ -38,16 +38,54 @@ class ApiAws {
    * バケットの一覧を取得する
    * @return {void}
    * @example
-   * getList();
+   * getListBuckets();
   */
-  getList() {
-    console.log("[Aws.js] getList()");
+  getListBuckets() {
+    console.log("[ApiAws.js] getListBuckets()");
 
     this.s3.listBuckets(function(err, data) {
       if (err) {
-        console.log("Error", err);
+        console.log("[ApiAws.js] Error", err);
       } else {
-        console.log("Success", data.Buckets);
+        console.log("[ApiAws.js] Success", data.Buckets);
+      }
+    });
+  }
+
+
+  /**
+   * 対象の bucket 内のファイルの一覧リストを取得する
+   * @param {string} bucket - upload 先のバケット
+   * @param {function} callback - ファイルの一覧リストを取得した後に呼び出すコールバック関数
+   * @return {void}
+   * @example
+   * getListObjects('uz.sensor');
+  */
+  getListObjects(bucket, callback) {
+    console.log("[ApiAws.js] getListObjects()");
+    console.log("[ApiAws.js] bucket   = " + bucket);
+
+    var params = {
+      Bucket: bucket  // バケット名
+    };
+
+    this.s3.listObjects(params, function(err, data) {
+      if (err) {
+        console.log("[ApiAws.js] Error", err);
+      } if (data) {
+        console.log("[ApiAws.js] Download Success");
+//        console.log("[ApiAws.js] data = " + JSON.stringify(data));
+
+        let array = new Array();
+
+        for(let value of data.Contents) {
+          console.log("[ApiAws.js] value.Key = " + value.Key);
+          array.push(value.Key);
+        }
+
+        if(callback != undefined) {
+          callback(array);
+        }
       }
     });
   }
@@ -61,8 +99,8 @@ class ApiAws {
    * createBucket();
   */
   createBucket(name) {
-    console.log("[Aws.js] createBucket()");
-    console.log("[Aws.js] name = " + name);
+    console.log("[ApiAws.js] createBucket()");
+    console.log("[ApiAws.js] name = " + name);
 
     // Create the parameters for calling createBucket
     var bucketParams = {
@@ -73,9 +111,9 @@ class ApiAws {
     // call S3 to create the bucket
     this.s3.createBucket(bucketParams, function(err, data) {
       if (err) {
-        console.log("Error", err);
+        console.log("[ApiAws.js] Error", err);
       } else {
-        console.log("Success", data.Location);
+        console.log("[ApiAws.js] Success", data.Location);
       }
     });
   }
@@ -91,10 +129,10 @@ class ApiAws {
    * upload('/media/pi/USBDATA/sensor/', '2020-03-08_sensor.txt', 'uz.sensor');
   */
   upload(path, filename, bucket) {
-    console.log("[Aws.js] upload()");
-    console.log("[Aws.js] path     = " + path);
-    console.log("[Aws.js] filename = " + filename);
-    console.log("[Aws.js] bucket   = " + bucket);
+    console.log("[ApiAws.js] upload()");
+    console.log("[ApiAws.js] path     = " + path);
+    console.log("[ApiAws.js] filename = " + filename);
+    console.log("[ApiAws.js] bucket   = " + bucket);
 
     var params = {
       Bucket: bucket,   // バケット名
@@ -104,28 +142,28 @@ class ApiAws {
 
     this.s3.upload(params, function(err, data) {
       if (err) {
-        console.log("Error", err);
+        console.log("[ApiAws.js] Error", err);
       } if (data) {
-        console.log("Upload Success", data.Location);
+        console.log("[ApiAws.js] Upload Success", data.Location);
       }
     });
   }
 
 
   /**
-   * ファイルを download する
-   * @param {string} path - 対象のファイルが置かれている PATH
+   * 指定した bucket の指定した filename を download する
+   * @param {string} path - ファイルを置く PATH
    * @param {string} filename - ファイル名
-   * @param {string} bucket - upload 先のバケット
+   * @param {string} bucket - 対象のバケット
    * @return {void}
    * @example
    * download('/home/pi/workspace/node_Sensor/data/', '2020-03-08_sensor.txt', 'uz.sensor');
   */
   download(path, filename, bucket) {
-    console.log("[Aws.js] download()");
-    console.log("[Aws.js] path     = " + path);
-    console.log("[Aws.js] filename = " + filename);
-    console.log("[Aws.js] bucket   = " + bucket);
+    console.log("[ApiAws.js] download()");
+    console.log("[ApiAws.js] path     = " + path);
+    console.log("[ApiAws.js] filename = " + filename);
+    console.log("[ApiAws.js] bucket   = " + bucket);
 
     var params = {
       Bucket: bucket,   // バケット名
@@ -134,9 +172,9 @@ class ApiAws {
 
     this.s3.getObject(params, function(err, data) {
       if (err) {
-        console.log("Error", err);
+        console.log("[ApiAws.js] Error", err);
       } if (data) {
-        console.log("Download Success");
+        console.log("[ApiAws.js] Download Success");
         fs.writeFileSync(path + filename, data.Body.toString());
       }
     });
