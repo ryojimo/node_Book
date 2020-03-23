@@ -84,6 +84,9 @@ let io = socketio.listen(server);
 //-----------------------------------------------------------------------------
 // 起動の処理関数
 //-----------------------------------------------------------------------------
+let g_path = '/home/pi/workspace/';
+//let g_path = '/home/ec2-user/workspace/';
+
 let g_apiAws        = new ApiAws();
 let g_apiFileSystem = new ApiFileSystem();
 
@@ -113,14 +116,14 @@ function startSystem() {
   // g_apiAws.createBucket('uz.book.rent');
 
   // AWS から書籍一覧の csv ファイルを取得する
-  g_apiAws.download('/home/pi/workspace/node_Book/data/', 'BT_books_one.csv', 'uz.book');
-  g_apiAws.download('/home/pi/workspace/node_Book/data/', 'BT_books_many.csv', 'uz.book');
+  g_apiAws.download(g_path + 'node_Book/data/', 'BT_books_one.csv', 'uz.book');
+  g_apiAws.download(g_path + 'node_Book/data/', 'BT_books_many.csv', 'uz.book');
 
   // AWS から貸し出したことのある書籍の json ファイルをすべて取得する
   g_apiAws.getListObjects('uz.book.rent', function(array) {
     for(let value of array) {
       console.log("[ApiAws.js] value = " + value);
-      g_apiAws.download('/home/pi/workspace/node_Book/data/rent/', value, 'uz.book.rent');
+      g_apiAws.download(g_path + 'node_Book/data/rent/', value, 'uz.book.rent');
     }
   });
 
@@ -174,11 +177,11 @@ function setBooksRent() {
   let ret = null;
   let jsonObj = null;
 
-  let filenames = fs.readdirSync('/home/pi/workspace/node_Book/data/rent/');
+  let filenames = fs.readdirSync(g_path + 'node_Book/data/rent/');
   console.log("[main.js] filenames = " + filenames);
   try {
     for(let value of filenames) {
-      let file = '/home/pi/workspace/node_Book/data/rent/' + value;
+      let file = g_path + 'node_Book/data/rent/' + value;
 //      console.log("[main.js] file = " + file);
 
       fs.statSync(file);
@@ -356,7 +359,7 @@ function update(value, index, array, target) {
         }
 
         let info = array[index].get();
-        let filename = '/home/pi/workspace/node_Book/data/rent/' + info._id + '.json';
+        let filename = g_path + 'node_Book/data/rent/' + info._id + '.json';
         g_apiFileSystem.write(filename, info);
       }
     }
