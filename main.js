@@ -127,9 +127,6 @@ function startSystem() {
   // 書籍一覧の csv ファイルを読み出して json 形式の配列データを取得する
   setTimeout(setBooksOne,  1000);  // AWS からファイルを取得するのに時間がかかるので 1000ms 待機して setBooksOne() を実行
   setTimeout(setBooksMany, 1100);  // AWS からファイルを取得するのに時間がかかるので 1100ms 待機して setBooksMany() を実行
-
-  // 貸出状態になっている本の全情報の json 形式の配列データを取得する
-  setTimeout(setBooksRent, 1200);  // AWS からファイルを取得するのに時間がかかるので 1200ms 待機して setBooksRent() を実行
 };
 
 
@@ -182,7 +179,7 @@ function setBooksRent() {
   try {
     for(let value of filenames) {
       let file = '/home/pi/workspace/node_Book/data/rent/' + value;
-      console.log("[main.js] file = " + file);
+//      console.log("[main.js] file = " + file);
 
       fs.statSync(file);
       ret = fs.readFileSync(file, 'utf8');
@@ -190,7 +187,7 @@ function setBooksRent() {
       g_jsonBooksRent.push(jsonObj);
     }
 
-    console.log("[main.js] g_jsonBooksRent = " + JSON.stringify(g_jsonBooksRent));
+//    console.log("[main.js] g_jsonBooksRent = " + JSON.stringify(g_jsonBooksRent));
   } catch(err) {
     if(err.code === 'ENOENT') {
       console.log("[main.js] file does not exist.");
@@ -267,6 +264,9 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('C_to_S_INIT', function() {
     console.log("[main.js] " + 'C_to_S_INIT');
+
+    // 貸出状態になっている本の全情報の json 形式の配列データを取得する
+    setBooksRent();
 
     // Array オブジェクトに DataBook オブジェクトをセット
     setArrayBooks(g_jsonBooksOne, g_arrayObjBooksOne);
