@@ -202,10 +202,10 @@ function setRent() {
  * @param {object} array - DataBook オブジェクトの配列
  * @return {void}
  * @example
- * setArrayBooks(g_jsonOne, g_arrayObjOne);
+ * setArrayBook(g_jsonOne, g_arrayObjOne);
 */
-function setArrayBooks(json, array) {
-  console.log("[main.js] setArrayBooks()");
+function setArrayBook(json, array) {
+  console.log("[main.js] setArrayBook()");
   if(json != null && array.length == 0) {
     for(let value of json) {
       let obj = new DataBook(value);
@@ -220,10 +220,10 @@ function setArrayBooks(json, array) {
  * @param {object} array - DataBook オブジェクトの配列
  * @return {void}
  * @example
- * updateArrayBooks();
+ * updateArrayBook(g_arrayObjOne);
 */
-function updateArrayBooks(array) {
-  console.log("[main.js] updateArrayBooks()");
+function updateArrayBook(array) {
+  console.log("[main.js] updateArrayBook()");
   for(let value of array) {
     let jsonObj = value.get();
 
@@ -267,13 +267,13 @@ io.sockets.on('connection', function(socket) {
     setRent();
 
     // Array オブジェクトに DataBook オブジェクトをセット
-    setArrayBooks(g_jsonOne, g_arrayObjOne);
-    setArrayBooks(g_jsonMany, g_arrayObjMany);
-    setArrayBooks(g_jsonRent, g_arrayObjRent);
+    setArrayBook(g_jsonOne, g_arrayObjOne);
+    setArrayBook(g_jsonMany, g_arrayObjMany);
+    setArrayBook(g_jsonRent, g_arrayObjRent);
 
     // 既に貸出済みのデータがあれば、g_arrayObjOne, g_arrayObjMany の内容を更新する
-    updateArrayBooks(g_arrayObjOne);
-    updateArrayBooks(g_arrayObjMany);
+    updateArrayBook(g_arrayObjOne);
+    updateArrayBook(g_arrayObjMany);
 
     // DataBook オブジェクト配列から、json データの配列を生成する
     let one = new Array();
