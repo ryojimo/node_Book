@@ -5,7 +5,7 @@
 */
 //const SV_IP   = 'book.rp.lfx.sony.co.jp'; // node.js server の IP アドレス
 //const SV_IP   = '52.194.10.158';          // node.js server の IP アドレス
-const SV_IP   = '192.168.91.141';           // node.js server の IP アドレス
+const SV_IP   = '192.168.91.143';           // node.js server の IP アドレス
 const SV_PORT = 4002;                       // node.js server の port 番号
 
 let server = io.connect('http://' + SV_IP + ':' + SV_PORT);
@@ -48,8 +48,8 @@ server.on('S_to_C_DATA', function(data) {
 
 server.on('S_to_C_INIT_DONE', function(data) {
   console.log("[app.js] " + 'S_to_C_INIT_DONE');
-//  console.log("[app.js] data.value = " + JSON.stringify(data.booksOne));
-//  console.log("[app.js] data.value = " + JSON.stringify(data.booksMany));
+//  console.log("[app.js] data.one  = " + JSON.stringify(data.one));
+//  console.log("[app.js] data.many = " + JSON.stringify(data.many));
 
   let options = {
     layout:         'fitColumns',
@@ -96,11 +96,11 @@ server.on('S_to_C_INIT_DONE', function(data) {
 
   // 一冊のみの本のテーブル
   $('#tabulator-table-one').tabulator(options);
-  $('#tabulator-table-one').tabulator('setData', data.booksOne);
+  $('#tabulator-table-one').tabulator('setData', data.one);
 
   // 複数冊ある本のテーブル
   $('#tabulator-table-many').tabulator(options);
-  $('#tabulator-table-many').tabulator('setData', data.booksMany);
+  $('#tabulator-table-many').tabulator('setData', data.many);
 
 });
 
@@ -108,15 +108,15 @@ server.on('S_to_C_INIT_DONE', function(data) {
 server.on('S_to_C_UPDATE_DONE', function(data) {
   console.log("[app.js] " + 'S_to_C_UPDATE_DONE');
   console.log("[app.js] data.ret   = " + data.ret);
-//  console.log("[app.js] data.value = " + JSON.stringify(data.booksOne));
-//  console.log("[app.js] data.value = " + JSON.stringify(data.booksMany));
+//  console.log("[app.js] data.one  = " + JSON.stringify(data.one));
+//  console.log("[app.js] data.many = " + JSON.stringify(data.many));
 
   if(data.ret == false) {
     alert('この書籍は持ち出し禁止です。');
   }
 
-  $('#tabulator-table-one').tabulator('setData', data.booksOne);
-  $('#tabulator-table-many').tabulator('setData', data.booksMany);
+  $('#tabulator-table-one').tabulator('setData', data.one);
+  $('#tabulator-table-many').tabulator('setData', data.many);
 });
 
 
@@ -126,7 +126,7 @@ server.on('S_to_C_UPDATE_DONE', function(data) {
 
 //-----------------------------------------------------------------------------
 /**
- * 一冊のみの本のテーブルのデータを送信する
+ * テーブルのデータを送信する
  * @param {void}
  * @return {void}
  * @example
@@ -135,11 +135,11 @@ server.on('S_to_C_UPDATE_DONE', function(data) {
 function updateTable() {
   console.log("[app.js] updateTable()");
 
-  let booksOne  = $('#tabulator-table-one').tabulator('getData');
-  let booksMany = $('#tabulator-table-many').tabulator('getData');
+  let one  = $('#tabulator-table-one').tabulator('getData');
+  let many = $('#tabulator-table-many').tabulator('getData');
 
   console.log("[app.js] server.emit(" + 'C_to_S_UPDATE' + ")");
-  server.emit('C_to_S_UPDATE', {booksOne: booksOne, booksMany: booksMany});
+  server.emit('C_to_S_UPDATE', {one: one, many: many});
 
 }
 

@@ -83,8 +83,8 @@ class DataBook {
    * @example
    * rentBook('0000114347', ****@gmail.com);
   */
-  rentBook(gid, email) {
-    console.log("[DataBook.js] rentBook()");
+  rent(gid, email) {
+    console.log("[DataBook.js] rent()");
     console.log("[DataBook.js] gid = " + gid);
     console.log("[DataBook.js] email = " + email);
 
@@ -103,10 +103,10 @@ class DataBook {
    * @param {void}
    * @return {void}
    * @example
-   * returnBook();
+   * dropOff();
   */
-  returnBook() {
-    console.log("[DataBook.js] returnBook()");
+  dropOff() {
+    console.log("[DataBook.js] dropOff()");
 
     this.data.status = false;
     this.data.gid = "";
@@ -122,10 +122,10 @@ class DataBook {
    * @param {void}
    * @return {void}
    * @example
-   * updateProgress();
+   * update();
   */
-  updateProgress() {
-    console.log("[DataBook.js] updateProgress()");
+  update() {
+    console.log("[DataBook.js] update()");
 
     this.data.progress--;
   }

@@ -20,16 +20,16 @@ let AWS     = require('aws-sdk');
 */
 class ApiAws {
 
-  constructor() {
+  constructor(file, region) {
     /**
      * データ
      * @type {string}
     */
-    this.accessKey = './data/aws_rootkey.json';
-    this.region = 'ap-northeast-1';
+    this.accessKey = file;
+    this.region = region;
 
-    AWS.config.loadFromPath('./data/aws_rootkey.json');
-    AWS.config.update({region: 'ap-northeast-1'});
+    AWS.config.loadFromPath(file);
+    AWS.config.update({region: region});
     this.s3 = new AWS.S3();
   }
 
