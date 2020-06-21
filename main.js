@@ -119,8 +119,8 @@ function startSystem() {
   // g_apiAws.createBucket(g_aws_s3);
 
   // AWS からブック一覧の csv ファイルを取得する
-  g_apiAws.download(g_path_top + 'data/', 'BT_books_one.csv', g_aws_s3);
-  g_apiAws.download(g_path_top + 'data/', 'BT_books_many.csv', g_aws_s3);
+  g_apiAws.download(g_path_top + 'data/', 'bt_books_one.csv', g_aws_s3);
+  g_apiAws.download(g_path_top + 'data/', 'bt_books_many.csv', g_aws_s3);
 
   // ブック一覧の csv ファイルを読み出して json 形式の配列データを取得する
   setTimeout(setOne,  1000);  // AWS からファイルを取得するのに時間がかかるので 1000ms 待機して setOne() を実行
@@ -137,7 +137,7 @@ function startSystem() {
 */
 function setOne() {
   console.log("[main.js] setOne()");
-  csv().fromFile('./data/BT_books_one.csv').then((jsonObj)=> {
+  csv().fromFile('./data/bt_books_one.csv').then((jsonObj)=> {
 //    console.log("[main.js] jsonObj = " + JSON.stringify(jsonObj));
     g_jsonOne = jsonObj;
   });
@@ -153,7 +153,7 @@ function setOne() {
 */
 function setMany() {
   console.log("[main.js] setMany()");
-  csv().fromFile('./data/BT_books_many.csv').then((jsonObj)=> {
+  csv().fromFile('./data/bt_books_many.csv').then((jsonObj)=> {
 //    console.log("[main.js] jsonObj = " + JSON.stringify(jsonObj));
     g_jsonMany = jsonObj;
   });
